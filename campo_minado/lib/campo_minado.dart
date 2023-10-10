@@ -1,5 +1,4 @@
-// ignore: unused_import
-import 'dart:io';
+import 'dart:math';
 
 class Game {
   List<List<String>> _board = [];
@@ -19,6 +18,10 @@ class Game {
         _currentDifficulty.boardRows,
         (_) => List.generate(_currentDifficulty.boardCols, (_) => ' '),
       );
+
+      // Adiciona bombas com base na dificuldade
+      int numBombs = _calculateNumBombs();
+      _placeBombs(numBombs);
     } else {
       if (_customBoardRows <= 0 || _customBoardCols <= 0) {
         throw ArgumentError(
@@ -28,6 +31,37 @@ class Game {
         _customBoardRows,
         (_) => List.generate(_customBoardCols, (_) => ' '),
       );
+    }
+  }
+
+  // Calcula o número de bombas com base na dificuldade do jogo
+  int _calculateNumBombs() {
+    switch (_currentDifficulty) {
+      case Difficulty.easy:
+        return 10;
+      case Difficulty.medium:
+        return 30;
+      case Difficulty.hard:
+        return 100;
+      default:
+        return 0; // Valor padrão para dificuldades não reconhecidas
+    }
+  }
+
+  // Distribui as bombas aleatoriamente no tabuleiro
+  void _placeBombs(int numBombs) {
+    Random random = Random();
+    int bombsPlaced = 0;
+
+    while (bombsPlaced < numBombs) {
+      int row = random.nextInt(_board.length);
+      int col = random.nextInt(_board[0].length);
+
+      // Se a célula não é uma bomba, coloca uma bomba
+      if (_board[row][col] != 'X') {
+        _board[row][col] = 'X';
+        bombsPlaced++;
+      }
     }
   }
 

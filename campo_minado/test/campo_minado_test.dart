@@ -82,7 +82,7 @@ void main() {
 
       List<List<String>> board = g.getBoard();
 
-      // Verifica se nenhum campo é uma mina ('X') e nenhum campo está revelado ('O')
+      // Verifica se nenhum campo é uma mina  e nenhum campo está revelado
       expect(
           board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
           isTrue);
@@ -95,7 +95,7 @@ void main() {
 
       List<List<String>> board = g.getBoard();
 
-      // Verifica se nenhum campo é uma mina ('X') e nenhum campo está revelado ('O')
+      // Verifica se nenhum campo é uma mina e nenhum campo está revelado
       expect(
           board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
           isTrue);
@@ -108,7 +108,7 @@ void main() {
 
       List<List<String>> board = g.getBoard();
 
-      // Verifica se nenhum campo é uma mina ('X') e nenhum campo está revelado ('O')
+      // Verifica se nenhum campo é uma mina e nenhum campo está revelado
       expect(
           board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
           isTrue);
@@ -172,6 +172,63 @@ void main() {
           .length;
 
       expect(unrevealedCount, equals(expectedUnrevealedCount));
+    });
+
+    test('Número de bombas - Fácil', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.easy);
+
+      List<List<String>> board = g.getBoard();
+
+      // Calcula o número esperado de bombas em um jogo fácil
+      int expectedBombCount = 10;
+
+      // Verifica se o número de bombas é igual ao esperado
+      int bombCount = board
+          .expand((row) => row)
+          .where((cell) => cell == 'X') // Conta as células que contêm bombas
+          .length;
+
+      expect(bombCount, equals(expectedBombCount));
+    });
+
+    test('Número de bombas - Médio', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.medium);
+
+      List<List<String>> board = g.getBoard();
+
+      // Calcula o número esperado de bombas em um jogo médio
+      int expectedBombCount = 30;
+
+      // Verifica se o número de bombas é igual ao esperado
+      int bombCount = board
+          .expand((row) => row)
+          .where((cell) => cell == 'X') // Conta as células que contêm bombas
+          .length;
+
+      expect(bombCount, equals(expectedBombCount));
+    });
+
+    test('Número de bombas - Difícil', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.hard);
+
+      List<List<String>> board = g.getBoard();
+
+      // Calcula o número esperado de bombas em um jogo difícil
+      int expectedBombCount = 100;
+
+      // Verifica se o número de bombas é igual ao esperado
+      int bombCount = board
+          .expand((row) => row)
+          .where((cell) => cell == 'X') // Conta as células que contêm bombas
+          .length;
+
+      expect(bombCount, equals(expectedBombCount));
     });
   });
 }
