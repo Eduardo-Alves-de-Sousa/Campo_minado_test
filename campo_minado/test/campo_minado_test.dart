@@ -74,5 +74,18 @@ void main() {
       expect(rows, equals(24));
       expect(cols, equals(24));
     });
+
+    test('O jogo não é encerrado no inicio', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.easy);
+
+      List<List<String>> board = g.getBoard();
+
+      // Verifica se nenhum campo é uma mina e nenhum campo está revelado.
+      expect(
+          board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
+          isTrue);
+    });
   });
 }
