@@ -113,5 +113,65 @@ void main() {
           board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
           isTrue);
     });
+
+    test('Número de movimentos disponíveis - Fácil', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.easy);
+
+      List<List<String>> board = g.getBoard();
+
+      // Calcula o número esperado de células não reveladas em um jogo fácil
+      int expectedUnrevealedCount = 8 * 8; // Total de células no tabuleiro
+
+      // Verifica se o número de células não reveladas é igual ao esperado
+      int unrevealedCount = board
+          .expand((row) => row)
+          .where(
+              (cell) => cell != 'O') // Conta as células que não estão reveladas
+          .length;
+
+      expect(unrevealedCount, equals(expectedUnrevealedCount));
+    });
+
+    test('Número de movimentos disponíveis - Médio', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.medium);
+
+      List<List<String>> board = g.getBoard();
+
+      // Calcula o número esperado de células não reveladas em um jogo médio
+      int expectedUnrevealedCount = 10 * 16; // Total de células no tabuleiro
+
+      // Verifica se o número de células não reveladas é igual ao esperado
+      int unrevealedCount = board
+          .expand((row) => row)
+          .where(
+              (cell) => cell != 'O') // Conta as células que não estão reveladas
+          .length;
+
+      expect(unrevealedCount, equals(expectedUnrevealedCount));
+    });
+
+    test('Número de movimentos disponíveis - Difícil', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.hard);
+
+      List<List<String>> board = g.getBoard();
+
+      // Calcula o número esperado de células não reveladas em um jogo difícil
+      int expectedUnrevealedCount = 24 * 24; // Total de células no tabuleiro
+
+      // Verifica se o número de células não reveladas é igual ao esperado
+      int unrevealedCount = board
+          .expand((row) => row)
+          .where(
+              (cell) => cell != 'O') // Conta as células que não estão reveladas
+          .length;
+
+      expect(unrevealedCount, equals(expectedUnrevealedCount));
+    });
   });
 }
