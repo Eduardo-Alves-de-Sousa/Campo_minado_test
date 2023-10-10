@@ -75,14 +75,40 @@ void main() {
       expect(cols, equals(24));
     });
 
-    test('O jogo não é encerrado no inicio', () {
+    test('Jogo não encerrado no início - Fácil', () {
       Game g = Game();
       g.init();
       g.setDifficulty(Difficulty.easy);
 
       List<List<String>> board = g.getBoard();
 
-      // Verifica se nenhum campo é uma mina e nenhum campo está revelado.
+      // Verifica se nenhum campo é uma mina ('X') e nenhum campo está revelado ('O')
+      expect(
+          board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
+          isTrue);
+    });
+
+    test('Jogo não encerrado no início - Médio', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.medium);
+
+      List<List<String>> board = g.getBoard();
+
+      // Verifica se nenhum campo é uma mina ('X') e nenhum campo está revelado ('O')
+      expect(
+          board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
+          isTrue);
+    });
+
+    test('Jogo não encerrado no início - Difícil', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.hard);
+
+      List<List<String>> board = g.getBoard();
+
+      // Verifica se nenhum campo é uma mina ('X') e nenhum campo está revelado ('O')
       expect(
           board.every((row) => row.every((cell) => cell != 'X' && cell != 'O')),
           isTrue);
