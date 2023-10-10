@@ -1,5 +1,5 @@
 // ignore: unused_import
-import 'dart:math';
+import 'dart:io';
 
 class Game {
   List<List<String>> _board = [];
@@ -54,6 +54,8 @@ class Game {
     _customBoardCols = cols;
     _generateBoard(); // Regenera o tabuleiro com as novas configurações de tamanho
   }
+
+  void setBoardSizeForDifficulty(Difficulty easy) {}
 }
 
 enum Difficulty {
