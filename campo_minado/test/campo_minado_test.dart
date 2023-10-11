@@ -192,10 +192,72 @@ void main() {
       expect(bombCount, equals(expectedBombCount));
     });
 
-    test('Teste de Derrota', () {
+    test('Teste de Derrota - Fácil', () {
       Game g = Game();
       g.init();
       g.setDifficulty(Difficulty.easy);
+
+      List<List<String>> board = g.getBoard();
+
+      // Encontra uma posição com uma bomba e faça uma jogada nela
+      int rowWithBomb = -1;
+      int colWithBomb = -1;
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            rowWithBomb = row;
+            colWithBomb = col;
+            break;
+          }
+        }
+        if (rowWithBomb != -1) {
+          break;
+        }
+      }
+
+      // Simula uma jogada que revela a bomba.
+      g.play(rowWithBomb, colWithBomb);
+
+      // Verifica se o jogo é marcado como perdido ou não.
+      expect(g.isGameOver(), isTrue);
+      expect(g.isGameLost(), isTrue);
+    });
+
+    test('Teste de Derrota - Médio', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.medium);
+
+      List<List<String>> board = g.getBoard();
+
+      // Encontra uma posição com uma bomba e faça uma jogada nela
+      int rowWithBomb = -1;
+      int colWithBomb = -1;
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            rowWithBomb = row;
+            colWithBomb = col;
+            break;
+          }
+        }
+        if (rowWithBomb != -1) {
+          break;
+        }
+      }
+
+      // Simula uma jogada que revela a bomba.
+      g.play(rowWithBomb, colWithBomb);
+
+      // Verifica se o jogo é marcado como perdido ou não.
+      expect(g.isGameOver(), isTrue);
+      expect(g.isGameLost(), isTrue);
+    });
+
+    test('Teste de Derrota - Difícil', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.hard);
 
       List<List<String>> board = g.getBoard();
 
