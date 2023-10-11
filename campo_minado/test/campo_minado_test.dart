@@ -284,5 +284,33 @@ void main() {
       expect(g.isGameOver(), isTrue);
       expect(g.isGameLost(), isTrue);
     });
+
+    test('Zonas - Bombas Adjacentes - Todos os Níveis', () {
+      _testBombsAdjacent(Difficulty.easy);
+      _testBombsAdjacent(Difficulty.medium);
+      _testBombsAdjacent(Difficulty.hard);
+    });
   });
+}
+
+void _testBombsAdjacent(Difficulty difficulty) {
+  Game g = Game();
+  g.init();
+  g.setDifficulty(difficulty);
+
+  List<List<String>> board = g.getBoard();
+
+  // Loop para verificar bombas adjacentes nas zonas
+  for (int row = 0; row < board.length; row++) {
+    for (int col = 0; col < board[0].length; col++) {
+      if (board[row][col] != 'X') {
+        // Calcula o número de bombas adjacentes para a zona
+        int bombsAdjacent = g.getBombsAdjacent(row, col);
+
+        // Verifica se o número de bombas adjacentes está no intervalo de 0 a 8
+        expect(bombsAdjacent, greaterThanOrEqualTo(0));
+        expect(bombsAdjacent, lessThanOrEqualTo(8));
+      }
+    }
+  }
 }

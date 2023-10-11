@@ -115,6 +115,31 @@ class Game {
   bool isGameLost() {
     return _gameLost;
   }
+
+  isGameWon() {}
+
+  int getBombsAdjacent(int row, int col) {
+    int count = 0;
+
+    final List<int> dr = [-1, -1, -1, 0, 0, 1, 1, 1];
+    final List<int> dc = [-1, 0, 1, -1, 1, -1, 0, 1];
+
+    for (int i = 0; i < 8; i++) {
+      int newRow = row + dr[i];
+      int newCol = col + dc[i];
+
+      if (newRow >= 0 &&
+          newRow < _board.length &&
+          newCol >= 0 &&
+          newCol < _board[0].length) {
+        if (_board[newRow][newCol] == 'X') {
+          count++;
+        }
+      }
+    }
+
+    return count;
+  }
 }
 
 enum Difficulty {
