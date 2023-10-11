@@ -5,6 +5,8 @@ class Game {
   Difficulty _currentDifficulty = Difficulty.easy;
   int _customBoardRows = 0;
   int _customBoardCols = 0;
+  bool _gameOver = false;
+  bool _gameLost = false;
 
   // Inicializa o jogo com as configurações padrão
   void init() {
@@ -89,14 +91,38 @@ class Game {
     _generateBoard(); // Regenera o tabuleiro com as novas configurações de tamanho
   }
 
-  void setBoardSizeForDifficulty(Difficulty easy) {}
+  // Função para jogar uma célula
+  void play(int row, int col) {
+    if (_gameOver) {
+      return; // Não é possível jogar depois de um jogo terminado
+    }
+
+    if (_board[row][col] == 'X') {
+      // Se a célula contém uma bomba, o jogo é perdido
+      _gameOver = true;
+      _gameLost = true;
+    } else {
+      // Implemente a lógica para revelar células adjacentes ou marcar a célula jogada
+    }
+  }
+
+  // Verifica se o jogo está encerrado (ou seja, vitorioso ou derrotado)
+  bool isGameOver() {
+    return _gameOver;
+  }
+
+  // Verifica se o jogo foi perdido
+  bool isGameLost() {
+    return _gameLost;
+  }
 }
 
 enum Difficulty {
   easy,
   medium,
   hard,
-  custom, // Adicionamos uma dificuldade "custom" para personalização
+  custom,
+  nonExistentDifficulty, // Adicionamos uma dificuldade "custom" para personalização
 }
 
 extension DifficultyExtension on Difficulty {
