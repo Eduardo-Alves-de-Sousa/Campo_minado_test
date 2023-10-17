@@ -189,5 +189,71 @@ void main() {
 
       expect(jogador.getBombCount(), equals(bombasEsperadas));
     });
+
+    test('Limite de Bandeiras - Fácil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.easy);
+
+      int limiteDeBandeirasEsperado =
+          10; // Limite correto de bandeiras para o nível "Fácil"
+
+      // Marcar o limite de bandeiras permitido
+      for (int i = 0; i < limiteDeBandeirasEsperado; i++) {
+        jogador.marcarComBandeira(i, i);
+      }
+
+      // Tente marcar uma bandeira adicional além do limite
+      int linhaExcedente = limiteDeBandeirasEsperado + 1;
+      int colunaExcedente = limiteDeBandeirasEsperado + 1;
+      jogador.marcarComBandeira(linhaExcedente, colunaExcedente);
+
+      // Verificar se a zona excedente não está marcada com uma bandeira
+      expect(jogador.temBandeira(linhaExcedente, colunaExcedente), isFalse);
+    });
+
+    test('Limite de Bandeiras - Médio', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.medium);
+
+      int limiteDeBandeirasEsperado =
+          30; // Limite correto de bandeiras para o nível "Médio"
+
+      // Marcar o limite de bandeiras permitido
+      for (int i = 0; i < limiteDeBandeirasEsperado; i++) {
+        jogador.marcarComBandeira(i, i);
+      }
+
+      // Tente marcar uma bandeira adicional além do limite
+      int linhaExcedente = limiteDeBandeirasEsperado + 1;
+      int colunaExcedente = limiteDeBandeirasEsperado + 1;
+      jogador.marcarComBandeira(linhaExcedente, colunaExcedente);
+
+      // Verificar se a zona excedente não está marcada com uma bandeira
+      expect(jogador.temBandeira(linhaExcedente, colunaExcedente), isFalse);
+    });
+
+    test('Limite de Bandeiras - Difícil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.hard);
+
+      int limiteDeBandeirasEsperado =
+          100; // Limite correto de bandeiras para o nível "Difícil"
+
+      // Marcar o limite de bandeiras permitido
+      for (int i = 0; i < limiteDeBandeirasEsperado; i++) {
+        jogador.marcarComBandeira(i, i);
+      }
+
+      // Tente marcar uma bandeira adicional além do limite
+      int linhaExcedente = limiteDeBandeirasEsperado + 1;
+      int colunaExcedente = limiteDeBandeirasEsperado + 1;
+      jogador.marcarComBandeira(linhaExcedente, colunaExcedente);
+
+      // Verificar se a zona excedente não está marcada com uma bandeira
+      expect(jogador.temBandeira(linhaExcedente, colunaExcedente), isFalse);
+    });
   });
 }
