@@ -381,5 +381,59 @@ void main() {
         expect(jogador.isGameLost(), isFalse);
       }
     });
+
+    test('Verificação de Vitória - Fácil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.easy);
+
+      // Marque todas as bombas com bandeiras
+      for (int linha = 0; linha < jogador.getBoard().length; linha++) {
+        for (int coluna = 0; coluna < jogador.getBoard()[0].length; coluna++) {
+          if (jogador.getBoard()[linha][coluna] == 'X') {
+            jogador.marcarComBandeira(linha, coluna);
+          }
+        }
+      }
+
+      // Se todas as bombas estiverem marcadas com bandeiras, o jogador venceu o jogo
+      expect(jogador.isGameWon(), isTrue);
+    });
+
+    test('Verificação de Vitória - Médio', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.medium);
+
+      // Marque todas as bombas com bandeiras
+      for (int linha = 0; linha < jogador.getBoard().length; linha++) {
+        for (int coluna = 0; coluna < jogador.getBoard()[0].length; coluna++) {
+          if (jogador.getBoard()[linha][coluna] == 'X') {
+            jogador.marcarComBandeira(linha, coluna);
+          }
+        }
+      }
+
+      // Se todas as bombas estiverem marcadas com bandeiras, o jogador venceu o jogo
+      expect(jogador.isGameWon(), isTrue);
+    });
+
+    test('Verificação de Vitória - Difícil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.hard);
+
+      // Marque todas as bombas com bandeiras
+      for (int linha = 0; linha < jogador.getBoard().length; linha++) {
+        for (int coluna = 0; coluna < jogador.getBoard()[0].length; coluna++) {
+          if (jogador.getBoard()[linha][coluna] == 'X') {
+            jogador.marcarComBandeira(linha, coluna);
+          }
+        }
+      }
+
+      // Se todas as bombas estiverem marcadas com bandeiras, o jogador venceu o jogo
+      expect(jogador.isGameWon(), isTrue);
+    });
   });
 }
