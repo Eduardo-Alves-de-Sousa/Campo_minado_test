@@ -1,3 +1,4 @@
+import 'package:campo_minado/dificuldade.dart';
 import 'package:test/test.dart';
 import 'package:campo_minado/jogador.dart';
 
@@ -156,6 +157,37 @@ void main() {
 
       // Verificar se a zona não está marcada com uma bandeira
       expect(jogador.temBandeira(linha, coluna), isFalse);
+    });
+
+    test('Marcação de Bombas Corretamente - Fácil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.easy);
+
+      int bombasEsperadas = 10; // Número correto de bombas para o nível "Fácil"
+
+      expect(jogador.getBombCount(), equals(bombasEsperadas));
+    });
+
+    test('Marcação de Bombas Corretamente - Médio', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.medium);
+
+      int bombasEsperadas = 30; // Número correto de bombas para o nível "Médio"
+
+      expect(jogador.getBombCount(), equals(bombasEsperadas));
+    });
+
+    test('Marcação de Bombas Corretamente - Difícil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.hard);
+
+      int bombasEsperadas =
+          100; // Número correto de bombas para o nível "Difícil"
+
+      expect(jogador.getBombCount(), equals(bombasEsperadas));
     });
   });
 }

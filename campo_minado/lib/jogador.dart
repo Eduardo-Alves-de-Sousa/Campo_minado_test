@@ -1,4 +1,5 @@
 import 'package:campo_minado/campo_minado.dart';
+import 'package:campo_minado/dificuldade.dart';
 
 class Jogador extends Game {
   Jogador() : super();
@@ -74,10 +75,24 @@ class Jogador extends Game {
     if (linha >= 0 &&
         linha < getBoard().length &&
         coluna >= 0 &&
-        coluna < getBoard()[0].length) {
+        coluna < getBoard().length) {
       // Verifica se a zona está descoberta
       return getBoard()[linha][coluna] == 'D'; // 'D' representa zona descoberta
     }
     return false;
+  }
+
+  int getBombCount() {
+    int bombCount = 0;
+
+    for (int linha = 0; linha < getBoard().length; linha++) {
+      for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
+        if (getBoard()[linha][coluna] == 'X') {
+          bombCount++;
+        }
+      }
+    }
+
+    return bombCount;
   }
 }
