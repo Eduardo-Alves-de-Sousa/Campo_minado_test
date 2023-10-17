@@ -647,5 +647,50 @@ void main() {
       // Verificar se a zona excedente não está marcada com uma bandeira
       expect(jogador.temBandeira(linhaExcedente, colunaExcedente), isFalse);
     });
+    test('Teste de Clique em Zona sem Bomba - Continuar o Jogo', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro que não contém uma bomba.
+      int linha = 0;
+      int coluna = 0;
+
+      // Certifique-se de que a zona não contenha uma bomba
+      jogador.removerBandeira(linha, coluna);
+
+      // Clique na zona
+      jogador.descobrirZona(linha, coluna);
+
+      // Verifique se a zona está descoberta
+      expect(jogador.estaDescoberta(linha, coluna), isTrue);
+
+      // Verifique se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+
+      // Verifique se o tabuleiro foi atualizado corretamente (ou seja, sem bombas adjacentes)
+      expect(jogador.getBoard()[linha][coluna], isNot(' '));
+    });
+    test(
+        'Teste de Clique em Zona sem Bombas Adjacentes - Descoberta Automática',
+        () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Certifique-se de que a zona não contenha bombas
+      jogador.getBoard()[linha][coluna] = ' ';
+
+      // Clique na zona sem bombas adjacentes
+      jogador.descobrirZona(linha, coluna);
+
+      // Verifique se a zona clicada e as zonas adjacentes sem bombas também estão descobertas
+      expect(jogador.estaDescoberta(linha, coluna), isTrue);
+
+      // Verifique se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+    });
   });
 }
