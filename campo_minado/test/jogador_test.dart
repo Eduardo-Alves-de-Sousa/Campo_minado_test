@@ -74,5 +74,48 @@ void main() {
       expect(jogador.temBandeira(linhaForaDosLimites, colunaForaDosLimites),
           isFalse);
     });
+
+    test('Verificação de Vitória com Bandeiras', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // ignore: unused_local_variable
+      int bombasNoTabuleiro = 0;
+      for (int linha = 0; linha < jogador.getBoard().length; linha++) {
+        for (int coluna = 0; coluna < jogador.getBoard()[0].length; coluna++) {
+          if (jogador.getBoard()[linha][coluna] == 'X') {
+            bombasNoTabuleiro++;
+          }
+        }
+      }
+
+      for (int linha = 0; linha < jogador.getBoard().length; linha++) {
+        for (int coluna = 0; coluna < jogador.getBoard()[0].length; coluna++) {
+          jogador.marcarComBandeira(linha, coluna);
+        }
+      }
+
+      expect(jogador.isGameWon(), isTrue);
+    });
+    test('Ação Dupla com Clique Direito', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Marcar a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Verificar se a zona está marcada com uma bandeira
+      expect(jogador.temBandeira(linha, coluna), isTrue);
+
+      // Tentar alternar a marcação com um clique direito
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Verificar se a bandeira foi removida
+      expect(jogador.temBandeira(linha, coluna), isFalse);
+    });
   });
 }

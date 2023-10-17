@@ -13,8 +13,13 @@ class Jogador extends Game {
         coluna >= 0 &&
         coluna < getBoard()[0].length) {
       // Marca a zona com uma bandeira na posição (linha, coluna)
-      getBoard()[linha][coluna] =
-          'F'; // Supondo que 'F' representa uma bandeira
+      if (getBoard()[linha][coluna] != 'F') {
+        getBoard()[linha][coluna] =
+            'F'; // Supondo que 'F' representa uma bandeira
+      } else {
+        getBoard()[linha][coluna] =
+            'O'; // Remove a bandeira se já estiver marcada
+      }
     }
   }
 
@@ -39,5 +44,16 @@ class Jogador extends Game {
       getBoard()[linha][coluna] =
           'O'; // Supondo que 'O' representa uma célula não revelada
     }
+  }
+
+  bool isGameWon() {
+    for (int linha = 0; linha < getBoard().length; linha++) {
+      for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
+        if (getBoard()[linha][coluna] == 'X' && !temBandeira(linha, coluna)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }
