@@ -552,5 +552,36 @@ void main() {
 
       expect(jogador.getBombCount(), equals(bombasEsperadas));
     });
+    test('Descobrir Bomba - Perder o Jogo', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro que contém uma bomba.
+      int linha = 0;
+      int coluna = 0;
+
+      // Se o jogador descobrir uma bomba, ele deve perder o jogo.
+      if (jogador.getBoard()[linha][coluna] == 'X') {
+        jogador.descobrirZona(linha, coluna);
+        expect(jogador.isGameLost(), isTrue);
+      } else {
+        jogador.descobrirZona(linha, coluna);
+        expect(jogador.isGameLost(), isFalse);
+      }
+    });
+    test('Marcar todas as Zonas Corretamente - Vitória', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Marque todas as zonas com bandeiras corretamente.
+      for (int linha = 0; linha < jogador.getBoard().length; linha++) {
+        for (int coluna = 0; coluna < jogador.getBoard()[0].length; coluna++) {
+          jogador.marcarComBandeira(linha, coluna);
+        }
+      }
+
+      // Se todas as zonas estiverem marcadas com bandeiras corretamente, o jogador venceu o jogo.
+      expect(jogador.isGameWon(), isTrue);
+    });
   });
 }
