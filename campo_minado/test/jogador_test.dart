@@ -692,5 +692,35 @@ void main() {
       // Verifique se o jogo ainda está em andamento (não foi perdido)
       expect(jogador.isGameLost(), isFalse);
     });
+    test('Teste de Marcação de Bandeira em Zona sem Bomba - Não Afetar o Jogo',
+        () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Certifique-se de que a zona não contenha bombas
+      jogador.getBoard()[linha][coluna] = ' ';
+
+      // Marque a zona sem bombas com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Verifique se a zona está marcada com uma bandeira
+      expect(jogador.temBandeira(linha, coluna), isTrue);
+
+      // Verifique se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+
+      // Tente descobrir a zona com bandeira
+      jogador.descobrirZona(linha, coluna);
+
+      // Verifique se a zona ainda está marcada como não descoberta
+      expect(jogador.estaDescoberta(linha, coluna), isFalse);
+
+      // Verifique se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+    });
   });
 }
