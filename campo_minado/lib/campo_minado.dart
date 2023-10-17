@@ -116,8 +116,6 @@ class Game {
     return _gameLost;
   }
 
-  isGameWon() {}
-
   int getBombsAdjacent(int row, int col) {
     int count = 0;
 
