@@ -1,4 +1,5 @@
 import 'package:campo_minado/campo_minado.dart';
+// ignore: unused_import
 import 'package:campo_minado/dificuldade.dart';
 
 class Jogador extends Game {
@@ -94,5 +95,19 @@ class Jogador extends Game {
     }
 
     return bombCount;
+  }
+
+  int getTotalFlagCount() {
+    int totalFlags = 0;
+
+    for (int linha = 0; linha < getBoard().length; linha++) {
+      for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
+        if (getBoard()[linha][coluna] == 'F') {
+          totalFlags++;
+        }
+      }
+    }
+
+    return totalFlags;
   }
 }

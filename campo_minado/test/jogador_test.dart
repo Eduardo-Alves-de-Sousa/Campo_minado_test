@@ -435,5 +435,92 @@ void main() {
       // Se todas as bombas estiverem marcadas com bandeiras, o jogador venceu o jogo
       expect(jogador.isGameWon(), isTrue);
     });
+
+    test('Não é possível Marcar Bandeira em Zona Descoberta', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Descobrir a zona
+      jogador.descobrirZona(linha, coluna);
+
+      // Tente marcar a zona com uma bandeira após a descoberta
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Verificar se a zona não está marcada com uma bandeira
+      expect(jogador.temBandeira(linha, coluna), isFalse);
+    });
+
+    test('Descobrir Zona com Bandeira - Deve ser Ignorado', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Marcar a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Tentar descobrir a zona que foi marcada com uma bandeira
+      jogador.descobrirZona(linha, coluna);
+
+      // Verificar se a zona não está marcada como descoberta
+      expect(jogador.estaDescoberta(linha, coluna), isFalse);
+
+      // Verificar se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+    });
+
+    test('Descobrir Zona sem Bandeira - Deve ser Revelado', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Garanta que a zona não esteja marcada com bandeira
+      jogador.removerBandeira(linha, coluna);
+
+      // Descobrir a zona
+      jogador.descobrirZona(linha, coluna);
+
+      // Verificar se a zona está descoberta
+      expect(jogador.estaDescoberta(linha, coluna), isTrue);
+
+      // Verificar se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+
+      // Verificar se o tabuleiro foi atualizado corretamente (ou seja, sem bombas adjacentes)
+      expect(jogador.getBoard()[linha][coluna], isNot(' '));
+    });
+
+    test('Descobrir Zona em Zona Já Descoberta - Deve ser Ignorado', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Garanta que a zona não esteja marcada com bandeira
+      jogador.removerBandeira(linha, coluna);
+
+      // Descobrir a zona pela primeira vez
+      jogador.descobrirZona(linha, coluna);
+
+      // Tente descobrir a mesma zona novamente
+      jogador.descobrirZona(linha, coluna);
+
+      // Verificar se a zona permanece marcada como descoberta
+      expect(jogador.estaDescoberta(linha, coluna), isTrue);
+
+      // Verificar se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+    });
   });
 }
