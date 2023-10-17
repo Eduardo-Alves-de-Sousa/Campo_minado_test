@@ -1,4 +1,5 @@
 import 'package:campo_minado/campo_minado.dart';
+import 'package:campo_minado/dificuldade.dart';
 import 'package:test/test.dart';
 
 void main() {
