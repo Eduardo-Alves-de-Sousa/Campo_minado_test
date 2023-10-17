@@ -321,5 +321,65 @@ void main() {
       // Verificar se a zona excedente não está marcada com uma bandeira
       expect(jogador.temBandeira(linhaExcedente, colunaExcedente), isFalse);
     });
+
+    test('Verificação de Perda ao Marcar Bomba com Bandeira - Fácil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.easy);
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Marcar a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Se a zona for uma bomba, o jogador perde o jogo
+      if (jogador.getBoard()[linha][coluna] == 'X') {
+        expect(jogador.isGameLost(), isTrue);
+      } else {
+        expect(jogador.isGameLost(), isFalse);
+      }
+    });
+
+    test('Verificação de Perda ao Marcar Bomba com Bandeira - Médio', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.medium);
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Marcar a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Se a zona for uma bomba, o jogador perde o jogo
+      if (jogador.getBoard()[linha][coluna] == 'X') {
+        expect(jogador.isGameLost(), isTrue);
+      } else {
+        expect(jogador.isGameLost(), isFalse);
+      }
+    });
+
+    test('Verificação de Perda ao Marcar Bomba com Bandeira - Difícil', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+      jogador.setDifficulty(Difficulty.hard);
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Marcar a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Se a zona for uma bomba, o jogador perde o jogo
+      if (jogador.getBoard()[linha][coluna] == 'X') {
+        expect(jogador.isGameLost(), isTrue);
+      } else {
+        expect(jogador.isGameLost(), isFalse);
+      }
+    });
   });
 }
