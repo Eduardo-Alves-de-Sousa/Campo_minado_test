@@ -306,6 +306,20 @@ void main() {
       int col = numCols + 1;
       expect(() => g.play(row, col), throwsA(isA<RangeError>()));
     });
+    test('Teste de Desempenho - Geração do Tabuleiro', () {
+      Game g = Game();
+
+      // Execute a geração do tabuleiro e meça o tempo
+      Stopwatch stopwatch = Stopwatch()..start();
+      g.init();
+      stopwatch.stop();
+
+      // Defina um limite de tempo aceitável para a geração do tabuleiro (em milissegundos)
+      int limiteTempo = 100;
+
+      // Verifique se o tempo de geração do tabuleiro está dentro do limite
+      expect(stopwatch.elapsedMilliseconds, lessThan(limiteTempo));
+    });
   });
 }
 
