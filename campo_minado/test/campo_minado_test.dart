@@ -338,6 +338,70 @@ void main() {
 
       // Você pode continuar adicionando mais jogadas e verificações conforme necessário
     });
+    test('Adicionar Bombas Aleatoriamente - Fácil', () {
+      Game g = Game();
+      g.setDifficulty(Difficulty.easy);
+
+      g.init();
+
+      List<List<String>> board = g.getBoard();
+      int bombCount = 0;
+
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            bombCount++;
+          }
+        }
+      }
+
+      int expectedBombCount = 10; // Número esperado de bombas no nível fácil
+
+      expect(bombCount, equals(expectedBombCount));
+    });
+    test('Adicionar Bombas Aleatoriamente - Médio', () {
+      Game g = Game();
+      g.setDifficulty(Difficulty.medium);
+
+      g.init();
+
+      List<List<String>> board = g.getBoard();
+      int bombCount = 0;
+
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            bombCount++;
+          }
+        }
+      }
+
+      int expectedBombCount = 30; // Número esperado de bombas no nível médio
+
+      expect(bombCount, equals(expectedBombCount));
+    });
+
+    test('Adicionar Bombas Aleatoriamente - Difícil', () {
+      Game g = Game();
+      g.setDifficulty(Difficulty.hard);
+
+      g.init();
+
+      List<List<String>> board = g.getBoard();
+      int bombCount = 0;
+
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            bombCount++;
+          }
+        }
+      }
+
+      int expectedBombCount = 100; // Número esperado de bombas no nível difícil
+
+      expect(bombCount, equals(expectedBombCount));
+    });
   });
 }
 
