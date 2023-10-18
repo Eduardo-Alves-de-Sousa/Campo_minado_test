@@ -140,4 +140,12 @@ class Game {
 
     return count;
   }
+
+  String getCellStatus(int row, int col) {
+    if (_gameLost && _board[row][col] == 'X') {
+      return 'X'; // Célula com bomba após a derrota
+    } else {
+      return _board[row][col]; // Status normal da célula
+    }
+  }
 }

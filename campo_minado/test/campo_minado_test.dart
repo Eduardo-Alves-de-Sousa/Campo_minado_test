@@ -402,6 +402,45 @@ void main() {
 
       expect(bombCount, equals(expectedBombCount));
     });
+    test('Teste de Exibição de Bombas Após a Derrota', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.easy);
+
+      List<List<String>> board = g.getBoard();
+
+      // Encontra uma posição com uma bomba e faça uma jogada que revele a bomba
+      int rowWithBomb = -1;
+      int colWithBomb = -1;
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            rowWithBomb = row;
+            colWithBomb = col;
+            break;
+          }
+        }
+        if (rowWithBomb != -1) {
+          break;
+        }
+      }
+
+      // Simula uma jogada que revela a bomba e perde o jogo.
+      g.play(rowWithBomb, colWithBomb);
+
+      // Verifica se o jogo é marcado como perdido
+      expect(g.isGameLost(), isTrue);
+
+      // Verifica se as bombas são exibidas corretamente após a derrota
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          if (board[row][col] == 'X') {
+            // Verifica se as bombas são exibidas após a derrota
+            expect(g.getCellStatus(row, col), equals('X'));
+          }
+        }
+      }
+    });
   });
 }
 
