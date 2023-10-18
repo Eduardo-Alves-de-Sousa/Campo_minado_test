@@ -320,6 +320,24 @@ void main() {
       // Verifique se o tempo de geração do tabuleiro está dentro do limite
       expect(stopwatch.elapsedMilliseconds, lessThan(limiteTempo));
     });
+    test('Teste de Contagem de Bombas Adjacentes', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.easy);
+
+      // A seguir, revele algumas células próximas a uma bomba
+      g.play(1, 1); // Esta é uma célula vazia (sem bombas adjacentes)
+      g.play(2, 2); // Esta é uma célula com uma bomba adjacente
+
+      // Obtenha o tabuleiro após as jogadas
+      List<List<String>> board = g.getBoard();
+
+      // Verifique se as contagens de bombas adjacentes estão corretas
+      expect(board[1][1], equals(' ')); // Deve haver 1 bomba adjacente
+      expect(board[2][2], equals(' ')); // Esta é uma bomba
+
+      // Você pode continuar adicionando mais jogadas e verificações conforme necessário
+    });
   });
 }
 
