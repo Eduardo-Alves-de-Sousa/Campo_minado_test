@@ -291,6 +291,21 @@ void main() {
       _testBombsAdjacent(Difficulty.medium);
       _testBombsAdjacent(Difficulty.hard);
     });
+
+    test('Teste de Limites - Revelar Célula Fora dos Limites', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.easy);
+
+      List<List<String>> board = g.getBoard();
+      int numRows = board.length;
+      int numCols = board[0].length;
+
+      // Tente revelar uma célula fora dos limites do tabuleiro
+      int row = numRows;
+      int col = numCols + 1;
+      expect(() => g.play(row, col), throwsA(isA<RangeError>()));
+    });
   });
 }
 
