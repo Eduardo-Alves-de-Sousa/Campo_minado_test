@@ -794,5 +794,32 @@ void main() {
         'Descobrir zona: (1, 1)',
       ]);
     });
+
+    test('Teste de Tempo de Jogo', () {
+      // Inicie o cronômetro quando o jogo começar
+      Stopwatch stopwatch = Stopwatch()..start();
+
+      // Crie um jogador e inicie o jogo
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Simule a jogada do jogador (substitua isso com as ações reais do jogador)
+      // Suponha que o jogador clique em algumas zonas e marque algumas bandeiras
+      jogador.descobrirZona(0, 0);
+      jogador.marcarComBandeira(1, 1);
+      jogador.descobrirZona(2, 2);
+
+      // Pare o cronômetro quando o jogo terminar (ou quando você desejar medir o tempo)
+      stopwatch.stop();
+
+      // Obtenha o tempo decorrido em milissegundos
+      int tempoEmMilissegundos = stopwatch.elapsedMilliseconds;
+
+      // Converta o tempo para segundos
+      double tempoEmSegundos = tempoEmMilissegundos / 1000;
+
+      // Exemplo: verificar se o jogador levou menos de 60 segundos para jogar
+      expect(tempoEmSegundos, lessThan(60));
+    });
   });
 }
