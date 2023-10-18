@@ -171,7 +171,13 @@ void main() {
     print('Escolha uma ação:');
     print('1 - Revelar célula');
     print('2 - Marcar/Desmarcar célula');
+    print('3 - Sair'); // Adicionamos a opção de sair
     int action = int.parse(stdin.readLineSync()!);
+
+    if (action == 3) {
+      print('Você saiu do jogo.');
+      break; // Se a opção for sair, encerramos o loop
+    }
 
     print('Digite a linha (0 a ${rows - 1}): ');
     int row = int.parse(stdin.readLineSync()!);
