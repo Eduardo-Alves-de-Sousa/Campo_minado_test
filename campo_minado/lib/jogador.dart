@@ -4,9 +4,11 @@ import 'package:campo_minado/dificuldade.dart';
 
 class Jogador extends Game {
   Jogador() : super();
+  List<String> historicoDeAcoes = [];
 
   void iniciarJogo() {
     super.init();
+    historicoDeAcoes.clear(); // Limpa o histórico ao iniciar um novo jogo.
   }
 
   void marcarComBandeira(int linha, int coluna) {
@@ -109,5 +111,13 @@ class Jogador extends Game {
     }
 
     return totalFlags;
+  }
+
+  void adicionarAcaoAoHistorico(String acao) {
+    historicoDeAcoes.add(acao);
+  }
+
+  List<String> obterHistoricoDeAcoes() {
+    return List.from(historicoDeAcoes);
   }
 }

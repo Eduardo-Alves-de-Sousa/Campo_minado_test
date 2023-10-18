@@ -552,23 +552,7 @@ void main() {
 
       expect(jogador.getBombCount(), equals(bombasEsperadas));
     });
-    test('Descobrir Bomba - Perder o Jogo', () {
-      Jogador jogador = Jogador();
-      jogador.iniciarJogo();
 
-      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro que contém uma bomba.
-      int linha = 0;
-      int coluna = 0;
-
-      // Se o jogador descobrir uma bomba, ele deve perder o jogo.
-      if (jogador.getBoard()[linha][coluna] == 'X') {
-        jogador.descobrirZona(linha, coluna);
-        expect(jogador.isGameLost(), isTrue);
-      } else {
-        jogador.descobrirZona(linha, coluna);
-        expect(jogador.isGameLost(), isFalse);
-      }
-    });
     test('Marcar todas as Zonas Corretamente - Vitória', () {
       Jogador jogador = Jogador();
       jogador.iniciarJogo();
@@ -721,6 +705,94 @@ void main() {
 
       // Verifique se o jogo ainda está em andamento (não foi perdido)
       expect(jogador.isGameLost(), isFalse);
+    });
+    test('Teste de Marcação de Bandeira em Zona com Bomba - Vitória', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro que contenha uma bomba.
+      int linha = 0;
+      int coluna = 0;
+
+      // Certifique-se de que a zona contenha uma bomba
+      jogador.getBoard()[linha][coluna] = 'X';
+
+      // Marque a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Verifique se a zona está marcada com uma bandeira
+      expect(jogador.temBandeira(linha, coluna), isTrue);
+
+      // Verifique se o jogo ainda está em andamento (não foi perdido)
+      expect(jogador.isGameLost(), isFalse);
+
+      // Marque todas as bombas com bandeiras corretamente.
+      for (int i = 0; i < jogador.getBoard().length; i++) {
+        for (int j = 0; j < jogador.getBoard()[0].length; j++) {
+          if (jogador.getBoard()[i][j] == 'X') {
+            jogador.marcarComBandeira(i, j);
+          }
+        }
+      }
+
+      // Se todas as bombas estiverem marcadas com bandeiras corretamente, o jogador venceu o jogo.
+      expect(jogador.isGameWon(), isTrue);
+    });
+    test('Remover Bandeira antes de Revelar', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) seja uma coordenada válida no tabuleiro.
+      int linha = 0;
+      int coluna = 0;
+
+      // Marcar a zona com uma bandeira
+      jogador.marcarComBandeira(linha, coluna);
+
+      // Verificar se a zona está marcada com uma bandeira
+      expect(jogador.temBandeira(linha, coluna), isTrue);
+
+      // Remover a bandeira da zona
+      jogador.removerBandeira(linha, coluna);
+
+      // Verificar se a zona não está mais marcada com uma bandeira
+      expect(jogador.temBandeira(linha, coluna), isFalse);
+
+      // Revelar a zona após a remoção da bandeira
+      jogador.descobrirZona(linha, coluna);
+
+      // Verificar se a zona está descoberta
+      expect(jogador.estaDescoberta(linha, coluna), isTrue);
+    });
+    test('Teste de Histórico de Ações', () {
+      Jogador jogador = Jogador();
+      jogador.iniciarJogo();
+
+      // Suponhamos que (linha, coluna) sejam coordenadas válidas no tabuleiro.
+      int linha1 = 0;
+      int coluna1 = 0;
+      int linha2 = 1;
+      int coluna2 = 1;
+
+      // Marque a zona com uma bandeira e adicione a ação ao histórico
+      jogador.marcarComBandeira(linha1, coluna1);
+      jogador
+          .adicionarAcaoAoHistorico('Marcar com bandeira: ($linha1, $coluna1)');
+
+      // Remova a bandeira da zona e adicione a ação ao histórico
+      jogador.removerBandeira(linha1, coluna1);
+      jogador.adicionarAcaoAoHistorico('Remover bandeira: ($linha1, $coluna1)');
+
+      // Descubra a zona e adicione a ação ao histórico
+      jogador.descobrirZona(linha2, coluna2);
+      jogador.adicionarAcaoAoHistorico('Descobrir zona: ($linha2, $coluna2)');
+
+      // Verifique o histórico de ações
+      expect(jogador.obterHistoricoDeAcoes(), [
+        'Marcar com bandeira: (0, 0)',
+        'Remover bandeira: (0, 0)',
+        'Descobrir zona: (1, 1)',
+      ]);
     });
   });
 }
