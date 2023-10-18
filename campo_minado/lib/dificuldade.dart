@@ -1,12 +1,15 @@
+// Enum para representar os diferentes níveis de dificuldade
 enum Difficulty {
-  easy,
-  medium,
-  hard,
-  custom,
-  nonExistentDifficulty, // Adicionamos uma dificuldade "custom" para personalização
+  easy, // Fácil
+  medium, // Médio
+  hard, // Difícil
+  custom, // Personalizado
+  nonExistentDifficulty, // Dificuldade não existente (usado como padrão)
 }
 
+// Extensão para a enum Difficulty, adicionando propriedades para o número de linhas e colunas do tabuleiro
 extension DifficultyExtension on Difficulty {
+  // Obtém o número de linhas do tabuleiro com base na dificuldade
   int get boardRows {
     switch (this) {
       case Difficulty.easy:
@@ -20,6 +23,7 @@ extension DifficultyExtension on Difficulty {
     }
   }
 
+  // Obtém o número de colunas do tabuleiro com base na dificuldade
   int get boardCols {
     switch (this) {
       case Difficulty.easy:

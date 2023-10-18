@@ -1,16 +1,18 @@
 import 'dart:io';
 import 'dart:math';
 
+// Enum que representa os diferentes estados de cada célula no tabuleiro
 enum CellStatus { unrevealed, revealed, flagged }
 
 class Game {
-  late List<List<CellStatus>> _board;
-  late List<List<bool>> _bombs;
-  int _rows = 0;
-  int _cols = 0;
-  int _numBombs = 0;
-  bool _gameOver = false;
+  late List<List<CellStatus>> _board; // Matriz de estados das células
+  late List<List<bool>> _bombs; // Matriz para rastrear a localização das bombas
+  int _rows = 0; // Número de linhas no tabuleiro
+  int _cols = 0; // Número de colunas no tabuleiro
+  int _numBombs = 0; // Número total de bombas no tabuleiro
+  bool _gameOver = false; // Flag para rastrear o estado do jogo
 
+  // Inicializa o jogo com o número de linhas, colunas e bombas especificado
   void init(int rows, int cols, int numBombs) {
     _rows = rows;
     _cols = cols;
@@ -18,9 +20,10 @@ class Game {
     _board =
         List.generate(rows, (_) => List.filled(cols, CellStatus.unrevealed));
     _bombs = List.generate(rows, (_) => List.filled(cols, false));
-    _placeBombs();
+    _placeBombs(); // Coloca as bombas aleatoriamente no tabuleiro
   }
 
+  // Coloca bombas aleatoriamente no tabuleiro
   void _placeBombs() {
     final random = Random();
     int bombsPlaced = 0;
@@ -34,6 +37,7 @@ class Game {
     }
   }
 
+  // Revela uma célula no tabuleiro
   void revealCell(int row, int col) {
     if (_gameOver) return;
 
@@ -63,6 +67,7 @@ class Game {
     }
   }
 
+  // Conta o número de bombas adjacentes a uma célula
   int _countBombsAdjacent(int row, int col) {
     int count = 0;
     for (int r = -1; r <= 1; r++) {
@@ -80,6 +85,7 @@ class Game {
     return count;
   }
 
+  // Marca ou desmarca uma célula no tabuleiro
   void toggleFlag(int row, int col) {
     if (_gameOver) return;
 
@@ -90,26 +96,29 @@ class Game {
     }
   }
 
+  // Verifica se o jogo terminou (vitória ou derrota)
   bool isGameOver() {
     return _gameOver;
   }
 
+  // Imprime o tabuleiro no terminal
   void printBoard() {
     for (int row = 0; row < _rows; row++) {
       for (int col = 0; col < _cols; col++) {
         switch (_board[row][col]) {
           case CellStatus.unrevealed:
-            stdout.write(' ');
+            stdout.write(' '); // Célula não revelada
             break;
           case CellStatus.flagged:
-            stdout.write('F');
+            stdout.write('F'); // Célula marcada com bandeira
             break;
           case CellStatus.revealed:
             int bombsAdjacent = _countBombsAdjacent(row, col);
             if (bombsAdjacent == 0) {
-              stdout.write(' ');
+              stdout.write(' '); // Célula revelada sem bombas adjacentes
             } else {
-              stdout.write(bombsAdjacent.toString());
+              stdout.write(
+                  bombsAdjacent.toString()); // Número de bombas adjacentes
             }
             break;
         }
@@ -119,6 +128,7 @@ class Game {
     }
   }
 
+  // Verifica se o jogo foi perdido
   bool isGameLost() {
     if (_gameOver) {
       for (int row = 0; row < _rows; row++) {
@@ -136,23 +146,28 @@ class Game {
 void main() {
   print('Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:');
   print('1 - Fácil (8x8, 10 bombas)');
-  print('2 - Médio (12x12, 30 bombas)');
-  print('3 - Difícil (16x16, 50 bombas)');
+  print('2 - Médio (10x16, 30 bombas)');
+  print('3 - Difícil (24x24, 100 bombas)');
   print('4 - Personalizado');
+  print('5 - Sair'); // Adicionamos a opção de sair
 
   int choice = int.parse(stdin.readLineSync()!);
-  int rows = 8;
-  int cols = 8;
-  int numBombs = 10;
+  int rows = 0;
+  int cols = 0;
+  int numBombs = 0;
 
-  if (choice == 2) {
-    rows = 12;
-    cols = 12;
+  if (choice == 1) {
+    rows = 8;
+    cols = 8;
+    numBombs = 10;
+  } else if (choice == 2) {
+    rows = 10;
+    cols = 16;
     numBombs = 30;
   } else if (choice == 3) {
-    rows = 16;
-    cols = 16;
-    numBombs = 50;
+    rows = 24;
+    cols = 24;
+    numBombs = 100;
   } else if (choice == 4) {
     print('Digite o número de linhas: ');
     rows = int.parse(stdin.readLineSync()!);
@@ -160,6 +175,9 @@ void main() {
     cols = int.parse(stdin.readLineSync()!);
     print('Digite o número de bombas: ');
     numBombs = int.parse(stdin.readLineSync()!);
+  } else if (choice == 5) {
+    print('Você saiu do jogo.');
+    return; // Se a opção for sair, encerra o programa
   }
 
   final game = Game();
@@ -176,7 +194,7 @@ void main() {
 
     if (action == 3) {
       print('Você saiu do jogo.');
-      break; // Se a opção for sair, encerramos o loop
+      break; // Se a opção for sair, encerra o loop
     }
 
     print('Digite a linha (0 a ${rows - 1}): ');
