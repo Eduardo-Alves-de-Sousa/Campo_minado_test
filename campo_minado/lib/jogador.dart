@@ -1,10 +1,9 @@
 import 'package:campo_minado/campo_minado.dart';
-// ignore: unused_import
-import 'package:campo_minado/dificuldade.dart';
 
 class Jogador extends Game {
-  Jogador() : super();
   List<String> historicoDeAcoes = [];
+
+  Jogador() : super();
 
   void iniciarJogo() {
     super.init();
@@ -27,6 +26,26 @@ class Jogador extends Game {
         }
       }
     }
+  }
+
+  bool verificarGanharJogo() {
+    int bombCount = getBombCount();
+    int totalFlags = getTotalFlagCount();
+
+    if (bombCount == totalFlags) {
+      // Todas as minas foram marcadas com bandeiras
+      for (int linha = 0; linha < getBoard().length; linha++) {
+        for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
+          if (getBoard()[linha][coluna] != 'X' &&
+              !estaDescoberta(linha, coluna)) {
+            // Encontrou uma célula que não é uma mina e não foi revelada
+            return false;
+          }
+        }
+      }
+      return true; // Todas as outras células estão reveladas
+    }
+    return false; // Não há bandeiras em todas as minas
   }
 
   bool temBandeira(int linha, int coluna) {
@@ -119,5 +138,28 @@ class Jogador extends Game {
 
   List<String> obterHistoricoDeAcoes() {
     return List.from(historicoDeAcoes);
+  }
+
+  int contarBandeirasMarcadas() {
+    int count = 0;
+    for (int linha = 0; linha < getBoard().length; linha++) {
+      for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
+        if (getBoard()[linha][coluna] == 'F') {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  void limparTodasBandeiras() {
+    for (int linha = 0; linha < getBoard().length; linha++) {
+      for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
+        if (getBoard()[linha][coluna] == 'F') {
+          getBoard()[linha][coluna] =
+              'O'; // 'O' representa uma célula não revelada
+        }
+      }
+    }
   }
 }

@@ -3,10 +3,17 @@ import 'dart:math';
 import 'package:campo_minado/dificuldade.dart';
 
 class Game {
+  // Propriedade privada para armazenar o tabuleiro do jogo.
   List<List<String>> _board = [];
+
+  // Propriedade privada para armazenar a dificuldade atual do jogo.
   Difficulty _currentDifficulty = Difficulty.easy;
+
+  // Propriedades privadas para o tamanho personalizado do tabuleiro (inicializadas como 0).
   int _customBoardRows = 0;
   int _customBoardCols = 0;
+
+  // Propriedades booleanas para controlar o estado do jogo.
   bool _gameOver = false;
   bool _gameLost = false;
 
@@ -147,5 +154,18 @@ class Game {
     } else {
       return _board[row][col]; // Status normal da célula
     }
+  }
+
+  Difficulty getDifficulty() {
+    return _currentDifficulty;
+  }
+
+  String getCellValue(int i, int j) {
+    // Verifique se as coordenadas estão dentro dos limites do tabuleiro
+    if (i < 0 || i >= _board.length || j < 0 || j >= _board[0].length) {
+      return ''; // Fora dos limites do tabuleiro, retornar uma string vazia ou outro valor apropriado
+    }
+
+    return _board[i][j];
   }
 }

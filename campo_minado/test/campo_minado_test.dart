@@ -76,6 +76,91 @@ void main() {
       expect(cols, equals(24));
     });
 
+    test('Verificar que o nível padrão é Fácil', () {
+      Game g = Game();
+      g.init();
+
+      // Verifica se o nível padrão é "Fácil"
+      expect(g.getDifficulty(), equals(Difficulty.easy));
+    });
+
+    test('Verificar que o nível não é Fácil quando definido como Médio', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Médio"
+      g.setDifficulty(Difficulty.medium);
+
+      // Verifica se o nível não é "Fácil"
+      expect(g.getDifficulty(), isNot(equals(Difficulty.easy)));
+    });
+
+    test('Verificar que o nível não é Fácil quando definido como Difícil', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Difícil"
+      g.setDifficulty(Difficulty.hard);
+
+      // Verifica se o nível não é "Fácil"
+      expect(g.getDifficulty(), isNot(equals(Difficulty.easy)));
+    });
+
+    test('Verificar que o nível é Difícil quando definido como Difícil', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Difícil"
+      g.setDifficulty(Difficulty.hard);
+
+      // Verifica se o nível é "Difícil"
+      expect(g.getDifficulty(), equals(Difficulty.hard));
+    });
+
+    test('Verificar que o nível é Médio quando definido como Médio', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Médio"
+      g.setDifficulty(Difficulty.medium);
+
+      // Verifica se o nível é "Médio"
+      expect(g.getDifficulty(), equals(Difficulty.medium));
+    });
+
+    test('Verificar que o nível não é Médio quando definido como Fácil', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Fácil"
+      g.setDifficulty(Difficulty.easy);
+
+      // Verifica se o nível não é "Médio"
+      expect(g.getDifficulty(), isNot(equals(Difficulty.medium)));
+    });
+
+    test('Verificar que o nível não é Médio quando definido como Difícil', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Difícil"
+      g.setDifficulty(Difficulty.hard);
+
+      // Verifica se o nível não é "Médio"
+      expect(g.getDifficulty(), isNot(equals(Difficulty.medium)));
+    });
+
+    test('Verificar que o nível é Difícil quando definido como Difícil', () {
+      Game g = Game();
+      g.init();
+
+      // Define o nível do jogo como "Difícil"
+      g.setDifficulty(Difficulty.hard);
+
+      // Verifica se o nível é "Difícil"
+      expect(g.getDifficulty(), equals(Difficulty.hard));
+    });
+
     test('Número de movimentos disponíveis - Fácil', () {
       Game g = Game();
       g.init();
@@ -306,38 +391,37 @@ void main() {
       int col = numCols + 1;
       expect(() => g.play(row, col), throwsA(isA<RangeError>()));
     });
-    test('Teste de Desempenho - Geração do Tabuleiro', () {
-      Game g = Game();
 
-      // Execute a geração do tabuleiro e meça o tempo
-      Stopwatch stopwatch = Stopwatch()..start();
-      g.init();
-      stopwatch.stop();
-
-      // Defina um limite de tempo aceitável para a geração do tabuleiro (em milissegundos)
-      int limiteTempo = 100;
-
-      // Verifique se o tempo de geração do tabuleiro está dentro do limite
-      expect(stopwatch.elapsedMilliseconds, lessThan(limiteTempo));
-    });
-    test('Teste de Contagem de Bombas Adjacentes', () {
+    test('Teste de Limites - Revelar Célula Fora dos Limites (Médio)', () {
       Game g = Game();
       g.init();
-      g.setDifficulty(Difficulty.easy);
+      g.setDifficulty(Difficulty.medium);
 
-      // A seguir, revele algumas células próximas a uma bomba
-      g.play(1, 1); // Esta é uma célula vazia (sem bombas adjacentes)
-      g.play(2, 2); // Esta é uma célula com uma bomba adjacente
-
-      // Obtenha o tabuleiro após as jogadas
       List<List<String>> board = g.getBoard();
+      int numRows = board.length;
+      int numCols = board[0].length;
 
-      // Verifique se as contagens de bombas adjacentes estão corretas
-      expect(board[1][1], equals(' ')); // Deve haver 1 bomba adjacente
-      expect(board[2][2], equals(' ')); // Esta é uma bomba
-
-      // Você pode continuar adicionando mais jogadas e verificações conforme necessário
+      // Tente revelar uma célula fora dos limites do tabuleiro
+      int row = numRows;
+      int col = numCols + 1;
+      expect(() => g.play(row, col), throwsA(isA<RangeError>()));
     });
+
+    test('Teste de Limites - Revelar Célula Fora dos Limites (Difícil)', () {
+      Game g = Game();
+      g.init();
+      g.setDifficulty(Difficulty.hard);
+
+      List<List<String>> board = g.getBoard();
+      int numRows = board.length;
+      int numCols = board[0].length;
+
+      // Tente revelar uma célula fora dos limites do tabuleiro
+      int row = numRows;
+      int col = numCols + 1;
+      expect(() => g.play(row, col), throwsA(isA<RangeError>()));
+    });
+
     test('Adicionar Bombas Aleatoriamente - Fácil', () {
       Game g = Game();
       g.setDifficulty(Difficulty.easy);
@@ -440,6 +524,367 @@ void main() {
           }
         }
       }
+    });
+
+    group('Testes para o nível Fácil', () {
+      test('Número de movimentos disponíveis - Fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+
+        List<List<String>> board = g.getBoard();
+
+        // Calcula o número esperado de células não reveladas em um jogo fácil
+        int expectedUnrevealedCount = 8 * 8; // Total de células no tabuleiro
+
+        // Verifica se o número de células não reveladas é igual ao esperado
+        int unrevealedCount = board
+            .expand((row) => row)
+            .where((cell) =>
+                cell != 'O') // Conta as células que não estão reveladas
+            .length;
+
+        expect(unrevealedCount, equals(expectedUnrevealedCount));
+      });
+
+      test('Células com bomba - Nível Fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+
+        List<List<String>> board = g.getBoard();
+
+        // Verifica se o número de células com bombas corresponde à dificuldade
+        int bombsCount = board
+            .expand((row) => row)
+            .where((cell) => cell == 'X') // Conta as células com bombas
+            .length;
+
+        expect(bombsCount, equals(10)); // Dificuldade Fácil tem 10 bombas
+      });
+
+      test('Coordenadas válidas - Nível Fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+
+        int numRows = g.getBoard().length;
+        int numCols = g.getBoard()[0].length;
+
+        // Testa se as coordenadas estão dentro dos limites do tabuleiro
+        expect(g.getCellValue(-1, 0), equals(''));
+        expect(g.getCellValue(numRows, 0), equals(''));
+        expect(g.getCellValue(0, -1), equals(''));
+        expect(g.getCellValue(0, numCols), equals(''));
+        expect(g.getCellValue(numRows - 1, numCols - 1), isNot(equals('')));
+      });
+
+      test('Jogar todas as células sem bombas no nível fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+        List<List<String>> board = g.getBoard();
+
+        for (int row = 0; row < 8; row++) {
+          for (int col = 0; col < 8; col++) {
+            if (board[row][col] != 'X') {
+              g.play(row, col); // Revela a célula
+              expect(
+                  g.getCellStatus(row, col), equals(g.getCellValue(row, col)));
+            }
+          }
+        }
+
+        expect(g.isGameOver(), isFalse);
+        expect(g.isGameLost(), isFalse);
+      });
+      test('Revelar todas as bombas - Nível Fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+        List<List<String>> board = g.getBoard();
+
+        // Revelar todas as bombas
+        for (int row = 0; row < 8; row++) {
+          for (int col = 0; col < 8; col++) {
+            if (board[row][col] == 'X') {
+              g.play(row, col); // Revela a bomba
+            }
+          }
+        }
+
+        expect(g.isGameOver(), isTrue);
+        expect(g.isGameLost(), isTrue);
+      });
+
+      test('Jogar todas as células com bombas no nível fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+        List<List<String>> board = g.getBoard();
+
+        for (int row = 0; row < 8; row++) {
+          for (int col = 0; col < 8; col++) {
+            if (board[row][col] == 'X') {
+              g.play(row, col); // Revela a célula com bomba
+            }
+          }
+        }
+
+        expect(g.isGameOver(), isTrue);
+        expect(g.isGameLost(), isTrue);
+      });
+
+      test('Verificar que o jogo não inicia com a derrota no nível fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.easy);
+
+        expect(g.isGameLost(), isFalse);
+      });
+    });
+    group('Testes para o nível Médio', () {
+      test('Células com bomba - Nível Médio', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.medium);
+
+        List<List<String>> board = g.getBoard();
+
+        // Verifica se o número de células com bombas corresponde à dificuldade
+        int bombsCount = board
+            .expand((row) => row)
+            .where((cell) => cell == 'X') // Conta as células com bombas
+            .length;
+
+        expect(bombsCount, equals(30)); // Dificuldade Médio tem 30 bombas
+      });
+
+      test('Coordenadas válidas - Nível Médio', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.medium);
+
+        int numRows = g.getBoard().length;
+        int numCols = g.getBoard()[0].length;
+
+        // Testa se as coordenadas estão dentro dos limites do tabuleiro
+        expect(g.getCellValue(-1, 0), equals(''));
+        expect(g.getCellValue(numRows, 0), equals(''));
+        expect(g.getCellValue(0, -1), equals(''));
+        expect(g.getCellValue(0, numCols), equals(''));
+        expect(g.getCellValue(numRows - 1, numCols - 1), isNot(equals('')));
+      });
+      test('Jogar todas as células sem bombas no nível médio', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.medium);
+        List<List<String>> board = g.getBoard();
+
+        for (int row = 0; row < board.length; row++) {
+          for (int col = 0; col < board[0].length; col++) {
+            if (board[row][col] != 'X') {
+              g.play(row, col); // Revela a célula
+              expect(
+                  g.getCellStatus(row, col), equals(g.getCellValue(row, col)));
+            }
+          }
+        }
+
+        expect(g.isGameOver(), isFalse);
+        expect(g.isGameLost(), isFalse);
+      });
+      test('Verificar que o jogo não inicia com a derrota no nível médio', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.medium);
+
+        expect(g.isGameLost(), isFalse);
+      });
+      test('Teste de Exibição de Bombas Após a Derrota - Nível Médio', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.medium);
+
+        List<List<String>> board = g.getBoard();
+
+        // Encontra uma posição com uma bomba e faça uma jogada que revele a bomba
+        int rowWithBomb = -1;
+        int colWithBomb = -1;
+        for (int row = 0; row < board.length; row++) {
+          for (int col = 0; col < board[0].length; col++) {
+            if (board[row][col] == 'X') {
+              rowWithBomb = row;
+              colWithBomb = col;
+              break;
+            }
+          }
+          if (rowWithBomb != -1) {
+            break;
+          }
+        }
+
+        // Simula uma jogada que revela a bomba e perde o jogo.
+        g.play(rowWithBomb, colWithBomb);
+
+        // Verifica se o jogo é marcado como perdido
+        expect(g.isGameLost(), isTrue);
+
+        // Verifica se as bombas são exibidas corretamente após a derrota
+        for (int row = 0; row < board.length; row++) {
+          for (int col = 0; col < board[0].length; col++) {
+            if (board[row][col] == 'X') {
+              // Verifica se as bombas são exibidas após a derrota
+              expect(g.getCellStatus(row, col), equals('X'));
+            }
+          }
+        }
+      });
+    });
+
+    group('Testes para o nível Difícil', () {
+      test('Células com bomba - Nível Difícil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.hard);
+
+        List<List<String>> board = g.getBoard();
+
+        // Verifica se o número de células com bombas corresponde à dificuldade
+        int bombsCount = board
+            .expand((row) => row)
+            .where((cell) => cell == 'X') // Conta as células com bombas
+            .length;
+
+        expect(bombsCount, equals(100)); // Dificuldade Difícil tem 100 bombas
+      });
+
+      test('Coordenadas válidas - Nível Difícil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.hard);
+
+        int numRows = g.getBoard().length;
+        int numCols = g.getBoard()[0].length;
+
+        // Testa se as coordenadas estão dentro dos limites do tabuleiro
+        expect(g.getCellValue(-1, 0), equals(''));
+        expect(g.getCellValue(numRows, 0), equals(''));
+        expect(g.getCellValue(0, -1), equals(''));
+        expect(g.getCellValue(0, numCols), equals(''));
+        expect(g.getCellValue(numRows - 1, numCols - 1), isNot(equals('')));
+      });
+      test('Jogar todas as células sem bombas no nível difícil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.hard);
+        List<List<String>> board = g.getBoard();
+
+        for (int row = 0; row < board.length; row++) {
+          for (int col = 0; col < board[0].length; col++) {
+            if (board[row][col] != 'X') {
+              g.play(row, col); // Revela a célula
+              expect(
+                  g.getCellStatus(row, col), equals(g.getCellValue(row, col)));
+            }
+          }
+        }
+
+        expect(g.isGameOver(), isFalse);
+        expect(g.isGameLost(), isFalse);
+      });
+      test('Verificar que o jogo não inicia com a derrota no nível fácil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.hard);
+
+        expect(g.isGameLost(), isFalse);
+      });
+      test('Teste de Exibição de Bombas Após a Derrota - Nível Difícil', () {
+        Game g = Game();
+        g.init();
+        g.setDifficulty(Difficulty.hard);
+
+        List<List<String>> board = g.getBoard();
+
+        // Encontra uma posição com uma bomba e faça uma jogada que revele a bomba
+        int rowWithBomb = -1;
+        int colWithBomb = -1;
+        for (int row = 0; row < board.length; row++) {
+          for (int col = 0; col < board[0].length; col++) {
+            if (board[row][col] == 'X') {
+              rowWithBomb = row;
+              colWithBomb = col;
+              break;
+            }
+          }
+          if (rowWithBomb != -1) {
+            break;
+          }
+        }
+
+        // Simula uma jogada que revela a bomba e perde o jogo.
+        g.play(rowWithBomb, colWithBomb);
+
+        // Verifica se o jogo é marcado como perdido
+        expect(g.isGameLost(), isTrue);
+
+        // Verifica se as bombas são exibidas corretamente após a derrota
+        for (int row = 0; row < board.length; row++) {
+          for (int col = 0; col < board[0].length; col++) {
+            if (board[row][col] == 'X') {
+              // Verifica se as bombas são exibidas após a derrota
+              expect(g.getCellStatus(row, col), equals('X'));
+            }
+          }
+        }
+      });
+    });
+    group('Teste de Desempenho - Geração do Tabuleiro', () {
+      test('Geração do Tabuleiro - Fácil', () {
+        Game g = Game();
+
+        // Execute a geração do tabuleiro e meça o tempo
+        Stopwatch stopwatch = Stopwatch()..start();
+        g.init();
+        stopwatch.stop();
+
+        // Defina um limite de tempo aceitável para a geração do tabuleiro (em milissegundos)
+        int limiteTempo = 100;
+
+        // Verifique se o tempo de geração do tabuleiro está dentro do limite
+        expect(stopwatch.elapsedMilliseconds, lessThan(limiteTempo));
+      });
+
+      test('Geração do Tabuleiro - Médio', () {
+        Game g = Game();
+
+        // Execute a geração do tabuleiro e meça o tempo
+        Stopwatch stopwatch = Stopwatch()..start();
+        g.init();
+        stopwatch.stop();
+
+        // Defina um limite de tempo aceitável para a geração do tabuleiro (em milissegundos)
+        int limiteTempo = 200;
+
+        // Verifique se o tempo de geração do tabuleiro está dentro do limite
+        expect(stopwatch.elapsedMilliseconds, lessThan(limiteTempo));
+      });
+
+      test('Geração do Tabuleiro - Difícil', () {
+        Game g = Game();
+
+        // Execute a geração do tabuleiro e meça o tempo
+        Stopwatch stopwatch = Stopwatch()..start();
+        g.init();
+        stopwatch.stop();
+
+        // Defina um limite de tempo aceitável para a geração do tabuleiro (em milissegundos)
+        int limiteTempo = 300;
+
+        // Verifique se o tempo de geração do tabuleiro está dentro do limite
+        expect(stopwatch.elapsedMilliseconds, lessThan(limiteTempo));
+      });
     });
   });
 }

@@ -1,0 +1,21 @@
+10 minutos e 30 segundos
+45.0 segundos
+45.0 segundos
+12.345678 segundos
+5 segundos (10%)
+-15.0 segundos
+0.0 segundos
+100000000000000000000.0 segundos
+1e-20 segundos
+5 seconds
+5 segundos
+5 secondes
+1e-15 segundos
+12.3456789 segundos
+42.0 segundos
+12.5 segundos
+7.123 segundos
+123.4567 segundos
+1000000000.0 segundos
+1e-9 segundos
+0.123456789 segundos

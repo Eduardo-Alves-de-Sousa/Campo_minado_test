@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:math';
+// ignore: unused_import
+import 'dart:async';
 
 // Enum que representa os diferentes estados de cada célula no tabuleiro
 enum CellStatus { unrevealed, revealed, flagged }
@@ -37,20 +39,27 @@ class Game {
     }
   }
 
-  // Revela uma célula no tabuleiro
+  // Método para revelar uma célula no tabuleiro.
   void revealCell(int row, int col) {
+    // Verifica se o jogo já terminou; se sim, não faça nada.
     if (_gameOver) return;
 
+    // Verifica se a célula está marcada com uma bandeira; se sim, não faça nada.
     if (_board[row][col] == CellStatus.flagged) return;
 
+    // Verifica se a célula contém uma bomba; se sim, o jogo termina.
     if (_bombs[row][col]) {
       _gameOver = true;
       return;
     }
 
+    // Marca a célula como "revelada".
     _board[row][col] = CellStatus.revealed;
 
+    // Conta quantas bombas adjacentes existem a esta célula.
     int bombsAdjacent = _countBombsAdjacent(row, col);
+
+    // Se não houver bombas adjacentes (bombsAdjacent == 0), revele células adjacentes.
     if (bombsAdjacent == 0) {
       for (int r = -1; r <= 1; r++) {
         for (int c = -1; c <= 1; c++) {
@@ -59,6 +68,7 @@ class Game {
               col + c >= 0 &&
               col + c < _cols) {
             if (_board[row + r][col + c] == CellStatus.unrevealed) {
+              // Chama recursivamente 'revealCell' para revelar células adjacentes sem bombas.
               revealCell(row + r, col + c);
             }
           }
@@ -149,7 +159,8 @@ void main() {
   print('2 - Médio (10x16, 30 bombas)');
   print('3 - Difícil (24x24, 100 bombas)');
   print('4 - Personalizado');
-  print('5 - Sair'); // Adicionamos a opção de sair
+  print('5 - Ver Tempos de Jogo');
+  print('6 - Sair');
 
   int choice = int.parse(stdin.readLineSync()!);
   int rows = 0;
@@ -176,12 +187,20 @@ void main() {
     print('Digite o número de bombas: ');
     numBombs = int.parse(stdin.readLineSync()!);
   } else if (choice == 5) {
+    // Opção para visualizar tempos de jogo
+    print('Tempos de Jogo Registrados:');
+    _viewGameTimes();
+    return;
+  } else if (choice == 6) {
     print('Você saiu do jogo.');
-    return; // Se a opção for sair, encerra o programa
+    return;
   }
 
   final game = Game();
   game.init(rows, cols, numBombs);
+
+  // Declare e inicie o cronômetro
+  final stopwatch = Stopwatch()..start();
 
   while (!game.isGameOver()) {
     print('Tabuleiro:');
@@ -189,12 +208,12 @@ void main() {
     print('Escolha uma ação:');
     print('1 - Revelar célula');
     print('2 - Marcar/Desmarcar célula');
-    print('3 - Sair'); // Adicionamos a opção de sair
+    print('3 - Sair');
     int action = int.parse(stdin.readLineSync()!);
 
     if (action == 3) {
       print('Você saiu do jogo.');
-      break; // Se a opção for sair, encerra o loop
+      break;
     }
 
     print('Digite a linha (0 a ${rows - 1}): ');
@@ -209,10 +228,49 @@ void main() {
     }
   }
 
+  // Pare o cronômetro quando o jogo terminar (ou quando desejar medir o tempo)
+  stopwatch.stop();
+
+  // Obtenha o tempo decorrido em milissegundos
+  int tempoEmMilissegundos = stopwatch.elapsedMilliseconds;
+
+  // Converta o tempo para segundos
+  double tempoEmSegundos = tempoEmMilissegundos / 1000;
+
+  // Salve o tempo de jogo
+  _saveGameTime(tempoEmSegundos);
+
+  // ignore: unnecessary_brace_in_string_interps
+  print('Tempo de jogo: ${tempoEmSegundos} segundos');
+
   print('Jogo terminado!');
   if (game.isGameOver() && !game.isGameLost()) {
     print('Você venceu!');
   } else {
     print('Você perdeu!');
+  }
+}
+
+// Função para salvar o tempo de jogo em um arquivo
+void _saveGameTime(double gameTime) {
+  final file = File('game_times.txt');
+  if (!file.existsSync()) {
+    file.createSync();
+  }
+
+  final timeString = '${DateTime.now()}: $gameTime segundos\n';
+
+  file.writeAsStringSync(timeString, mode: FileMode.append);
+}
+
+// Função para visualizar tempos de jogo salvos
+void _viewGameTimes() {
+  final file = File('game_times.txt');
+  if (file.existsSync()) {
+    final content = file.readAsStringSync();
+    print('Tempos de Jogo Registrados:');
+    print(content);
+  } else {
+    print('Nenhum tempo de jogo registrado ainda.');
   }
 }
