@@ -162,4 +162,6 @@ class Jogador extends Game {
       }
     }
   }
+
+  void desmarcarBandeira(int linha, int coluna) {}
 }

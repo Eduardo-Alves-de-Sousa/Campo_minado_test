@@ -154,13 +154,17 @@ class Game {
 }
 
 void main() {
-  print('Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:');
-  print('1 - Fácil (8x8, 10 bombas)');
+  print("|-----------------------------------------------------------|");
+  print('|Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:|');
+  print("|-----------------------------------------------------------|");
+
+  print('\n1 - Fácil (8x8, 10 bombas)');
   print('2 - Médio (10x16, 30 bombas)');
   print('3 - Difícil (24x24, 100 bombas)');
   print('4 - Personalizado');
   print('5 - Ver Tempos de Jogo');
-  print('6 - Sair');
+  print('6 - Sair\n');
+  stdout.write("Escolha uma opção: ");
 
   int choice = int.parse(stdin.readLineSync()!);
   int rows = 0;
@@ -185,6 +189,7 @@ void main() {
     print('Digite o número de colunas: ');
     cols = int.parse(stdin.readLineSync()!);
     print('Digite o número de bombas: ');
+    stdout.write("Escolha uma opção: ");
     numBombs = int.parse(stdin.readLineSync()!);
   } else if (choice == 5) {
     // Opção para visualizar tempos de jogo
@@ -205,10 +210,11 @@ void main() {
   while (!game.isGameOver()) {
     print('Tabuleiro:');
     game.printBoard();
-    print('Escolha uma ação:');
+    print('\nEscolha uma ação:');
     print('1 - Revelar célula');
     print('2 - Marcar/Desmarcar célula');
-    print('3 - Sair');
+    print('3 - Sair\n');
+    stdout.write("Escolha uma opção: ");
     int action = int.parse(stdin.readLineSync()!);
 
     if (action == 3) {

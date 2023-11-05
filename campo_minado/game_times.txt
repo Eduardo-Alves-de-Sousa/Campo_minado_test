@@ -19,3 +19,13 @@
 1000000000.0 segundos
 1e-9 segundos
 0.123456789 segundos
+0.987654321 segundos
+0.123456789 segundos
+0.987654321 segundos
+1.23456789 segundos
+-0.123456789 segundos
+1.5 segundos
+0.0 segundos
+1000000.0 segundos
+1.0 segundos
+0.5 segundos

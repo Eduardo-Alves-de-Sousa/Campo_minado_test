@@ -40,6 +40,69 @@ void main() {
       expect(cols, equals(24));
     });
 
+    test('Selecionar Tamanho do Tabuleiro - Tamanho Personalizado', () {
+      Game g = Game();
+      g.init();
+      int customRows = 10;
+      int customCols = 14;
+      g.setBoardSize(customRows, customCols);
+
+      int rows = g.getBoard().length;
+      int cols = g.getBoard()[0].length;
+
+      expect(rows, equals(customRows));
+      expect(cols, equals(customCols));
+    });
+
+    test('Selecionar Tamanho do Tabuleiro - Tamanho Mínimo', () {
+      Game g = Game();
+      g.init();
+      g.setBoardSize(5, 5);
+
+      int rows = g.getBoard().length;
+      int cols = g.getBoard()[0].length;
+
+      expect(rows, equals(5));
+      expect(cols, equals(5));
+    });
+
+    test('Verificar Estado Inicial de Bombas', () {
+      Game g = Game();
+      g.init();
+      g.setBoardSize(8, 8);
+
+      List<List<String>> board = g.getBoard();
+
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          String cellStatus = g.getCellStatus(row, col);
+          String cellContent = board[row][col];
+          if (cellContent == 'X') {
+            // Verificar se o estado inicial das bombas é 'oculta'
+            expect(cellStatus, equals('oculta'));
+          }
+        }
+      }
+    });
+
+    test('Verificar Células Reveladas Inicialmente', () {
+      Game g = Game();
+      g.init();
+      g.setBoardSize(12, 12);
+
+      List<List<String>> board = g.getBoard();
+
+      for (int row = 0; row < board.length; row++) {
+        for (int col = 0; col < board[0].length; col++) {
+          String cellStatus = g.getCellStatus(row, col);
+          if (cellStatus == 'revelada') {
+            // Verificar se todas as células estão ocultas inicialmente
+            expect(board[row][col], isNot(equals('X')));
+          }
+        }
+      }
+    });
+
     test('Selecionar Tamanho do Tabuleiro - Fácil', () {
       Game g = Game();
       g.init();
@@ -486,6 +549,7 @@ void main() {
 
       expect(bombCount, equals(expectedBombCount));
     });
+
     test('Teste de Exibição de Bombas Após a Derrota', () {
       Game g = Game();
       g.init();
@@ -887,6 +951,44 @@ void main() {
       });
     });
   });
+  group('Selecionar Tamanho do Tabuleiro - Testes Parametrizados', () {
+    testCases(
+      [
+        {'rows': 5, 'cols': 5},
+        {'rows': 8, 'cols': 8},
+        {'rows': 10, 'cols': 10},
+        {'rows': 6, 'cols': 6},
+        {'rows': 4, 'cols': 4},
+        {'rows': 7, 'cols': 7},
+        {'rows': 9, 'cols': 9},
+        {'rows': 3, 'cols': 3},
+        {'rows': 12, 'cols': 12},
+        {'rows': 14, 'cols': 14},
+        {'rows': 11, 'cols': 11},
+        {'rows': 15, 'cols': 15},
+        {'rows': 13, 'cols': 13},
+        {'rows': 16, 'cols': 16},
+        {'rows': 18, 'cols': 18},
+      ],
+      "Selecionar Tamanho do Tabuleiro",
+    );
+  });
+}
+
+void testCases(List<Map<String, int>> boardSizes, String description) {
+  for (final size in boardSizes) {
+    test('$description - Tamanho ${size['rows']}x${size['cols']}', () {
+      Game g = Game();
+      g.init();
+      g.setBoardSize(size['rows']!, size['cols']!);
+
+      int rows = g.getBoard().length;
+      int cols = g.getBoard()[0].length;
+
+      expect(rows, equals(size['rows']));
+      expect(cols, equals(size['cols']));
+    });
+  }
 }
 
 void _testBombsAdjacent(Difficulty difficulty) {

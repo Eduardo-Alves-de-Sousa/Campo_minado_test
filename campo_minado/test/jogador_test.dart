@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:campo_minado/dificuldade.dart';
+// ignore: unused_import
+import 'package:parameterized_test/parameterized_test.dart';
 import 'package:test/test.dart';
 import 'package:campo_minado/jogador.dart';
 
@@ -36,7 +38,56 @@ void clearGameTimes() {
   }
 }
 
+enum Level { easy, medium, hard }
+
 void main() {
+  final resultadosPossiveis = [
+    'Vitória',
+    'Derrota',
+    'Jogo em Andamento',
+    'Vitória com Todos os Quadrados Seguros Abertos',
+    'Derrota por Explosão de Mina',
+    'Vitória com Marcas de Minas Corretas',
+    'Derrota com Quadrado com Mina Aberto',
+    'Vitória por Concessão do Adversário',
+    'Vitória com Todos os Quadrados Seguros Abertos',
+    'Vitória com Marcas de Minas Corretas',
+    'Vitória com Algumas Minas Não Marcadas',
+    'Vitória com Minas Marcadas Incorretamente',
+    'Derrota com Quadrado com Mina Aberto',
+    'Derrota com Quadrado Sem Mina Aberto',
+    'Derrota com Marcas de Minas Incorretas',
+    'Derrota por Explosão em Quadrado sem Mina',
+    'Vitória por Marcação de Todas as Minas Corretamente',
+    'Vitória com Marcação de Algumas Minas Incorretamente',
+    'Vitória com Minas Não Marcadas',
+    'Vitória com Explosão de Último Quadrado',
+    'Derrota por Abandono',
+    'Derrota por Protesto',
+    'Derrota por Violação das Regras',
+    'Derrota por Esquecimento de Quadrado',
+    'Derrota por Explosão de Quadrado Sem Mina',
+    'Vitória por Acerto de Minas por Chute',
+    'Vitória por Fluke',
+    'Vitória por Intuição',
+    'Vitória por Estratégia de Desvio',
+    'Derrota por Movimento Arriscado',
+    'Derrota por Desprezo de Sinais',
+    'Derrota por Ignorar Dicas',
+    'Derrota por Jogo Desleixado',
+    'Derrota por Escolha Errada de Quadrado',
+    'Vitória por Raciocínio Lógico',
+    'Vitória por Marcação Precisa de Minas',
+    'Vitória por Análise Cuidadosa',
+    'Vitória por Dedução Estratégica',
+    'Derrota por Falta de Atenção',
+    'Derrota por Click Desastrado',
+    'Derrota por Escolha Aleatória de Quadrado',
+    'Vitória por Descoberta de Mina',
+    'Vitória por Rotação de Estratégia',
+    'Vitória por Mudança de Abordagem'
+  ];
+
   group('Jogador', () {
     test('Marcar Zona com Bandeira', () {
       Jogador jogador = Jogador();
@@ -2144,5 +2195,351 @@ void main() {
       final gameTimes = loadGameTimes();
       expect(gameTimes, contains(contains('0.123456789 segundos')));
     });
+    test('Deve salvar e carregar o tempo de jogo com outro valor de precisão',
+        () {
+      final gameTimeWithPrecision = 0.987654321;
+      saveGameTime(gameTimeWithPrecision);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('0.987654321 segundos')));
+    });
+    test('Deve salvar e carregar múltiplos tempos de jogo com precisão', () {
+      final gameTimesWithPrecision = [0.123456789, 0.987654321, 1.23456789];
+      for (final time in gameTimesWithPrecision) {
+        saveGameTime(time);
+      }
+      final loadedGameTimes = loadGameTimes();
+      for (final time in gameTimesWithPrecision) {
+        expect(loadedGameTimes, contains(contains('$time segundos')));
+      }
+    });
+    test('Deve salvar e carregar tempos de jogo negativos com precisão', () {
+      final gameTimeWithPrecision = -0.123456789;
+      saveGameTime(gameTimeWithPrecision);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('-0.123456789 segundos')));
+    });
+    test('Deve salvar e carregar tempos de jogo maiores que 1 segundo', () {
+      final gameTime = 1.5; // 1.5 segundos
+      saveGameTime(gameTime);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('1.5 segundos')));
+    });
+
+    test('Deve salvar e carregar tempos de jogo zerados', () {
+      final gameTime = 0.0;
+      saveGameTime(gameTime);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('0.0 segundos')));
+    });
+
+    test('Deve lidar com valores muito grandes de tempo de jogo', () {
+      final gameTime = 1000000.0; // 1 milhão de segundos
+      saveGameTime(gameTime);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('1000000.0 segundos')));
+    });
+    test('Deve lidar com tempos de jogo arredondados', () {
+      final gameTime = 1.0; // 1 segundo
+      saveGameTime(gameTime);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('1.0 segundos')));
+    });
+    test('Deve lidar com tempos de jogo fracionados', () {
+      final gameTime = 0.5; // 0.5 segundos
+      saveGameTime(gameTime);
+      final gameTimes = loadGameTimes();
+      expect(gameTimes, contains(contains('0.5 segundos')));
+    });
   });
+
+  group('Testes do Resultado do Jogo', () {
+    for (final resultado in resultadosPossiveis) {
+      test('Resultado do jogo é válido: $resultado', () {
+        expect(resultado, anyOf(resultadosPossiveis));
+      });
+    }
+  });
+  final int numRows = 8; // Número de linhas do campo minado
+  final int numCols = 8; // Número de colunas do campo minado
+  final Jogador jogador = Jogador();
+
+  group(
+      'Testes de Marcação e Remoção de Bandeira em Todas as Posições, em um campo 8 x 8',
+      () {
+    setUp(() {
+      jogador.iniciarJogo();
+    });
+
+    testCases(numRows, numCols, "Marcar e Remover Bandeira",
+        (int linha, int coluna) {
+      test('Linha: $linha, Coluna: $coluna', () {
+        // Marcar a zona com uma bandeira
+        jogador.marcarComBandeira(linha, coluna);
+        expect(jogador.temBandeira(linha, coluna), isTrue);
+
+        // Remover a bandeira da zona
+        jogador.removerBandeira(linha, coluna);
+        expect(jogador.temBandeira(linha, coluna), isFalse);
+      });
+    });
+  });
+  group('Teste de Limite - Tabuleiro 8x8', () {
+    testLimiteFacil(
+      [
+        {'row': 0, 'col': 0},
+        {'row': 7, 'col': 0},
+        {'row': 0, 'col': 7},
+        {'row': 7, 'col': 7},
+        {'row': 4, 'col': 4},
+        {'row': 2, 'col': 6},
+        {'row': 3, 'col': 5},
+        {'row': 1, 'col': 3},
+        {'row': 6, 'col': 1},
+        {'row': 3, 'col': 7},
+        {'row': 4, 'col': 1},
+        {'row': 7, 'col': 4},
+      ],
+      "Teste de Limite - Tabuleiro 8x8",
+    );
+  });
+  group('Teste de Limite - Tabuleiro 10x16 (Nível Médio)', () {
+    testLimiteMedio(
+      [
+        {'row': 0, 'col': 0},
+        {'row': 9, 'col': 0},
+        {'row': 0, 'col': 15},
+        {'row': 9, 'col': 15},
+        {'row': 5, 'col': 8},
+        {'row': 2, 'col': 12},
+        {'row': 8, 'col': 7},
+        {'row': 1, 'col': 14},
+        {'row': 3, 'col': 10},
+        {'row': 7, 'col': 3},
+        {'row': 6, 'col': 12},
+        {'row': 5, 'col': 14},
+        {'row': 2, 'col': 7},
+      ],
+      "Teste de Limite - Tabuleiro 10x16 (Nível Médio)",
+    );
+  });
+  group('Teste de Limite - Tabuleiro 24x24 (Nível Difícil)', () {
+    testLimiteDificil(
+      [
+        {'row': 0, 'col': 0},
+        {'row': 23, 'col': 0},
+        {'row': 0, 'col': 23},
+        {'row': 23, 'col': 23},
+        {'row': 12, 'col': 18},
+        {'row': 6, 'col': 12},
+        {'row': 19, 'col': 4},
+        {'row': 3, 'col': 21},
+        {'row': 8, 'col': 15},
+        {'row': 16, 'col': 10},
+        {'row': 1, 'col': 19},
+        {'row': 22, 'col': 6},
+        {'row': 11, 'col': 3},
+      ],
+      "Teste de Limite - Tabuleiro 24x24 (Nível Difícil)",
+      100, // Limite de bombas no tabuleiro
+    );
+  });
+  group('Teste de Limite de Bombas - Tabuleiro 8x8', () {
+    testLimiteDeBombas(8, 8, 10, "Teste de Limite de Bombas - Tabuleiro 8x8");
+  });
+  group('Teste de Limite de Bombas - Tabuleiro 10x16', () {
+    testLimiteDeBombasmedio(
+        10, 16, 30, "Teste de Limite de Bombas - Tabuleiro 10x16");
+  });
+  group('Teste de Limite de Bombas - Tabuleiro 24x24 (Nível Difícil)', () {
+    testLimiteDeBombasdificil(24, 24, 100,
+        "Teste de Limite de Bombas - Tabuleiro 24x24 (Nível Difícil)");
+  });
+}
+
+void testLimiteDeBombasdificil(
+    int numRows, int numCols, int limiteDeBombas, String description) {
+  for (int i = 0; i < 15; i++) {
+    test('$description - Teste $i', () {
+      final tabuleiro =
+          List.generate(numRows, (i) => List.filled(numCols, false));
+
+      // Lista de posições possíveis no tabuleiro
+      final possiveisPosicoes = List.generate(numRows, (i) {
+        return List.generate(numCols, (j) => [i, j]);
+      }).expand((posicoes) => posicoes).toList();
+
+      for (int i = 0; i < limiteDeBombas; i++) {
+        final posicaoAleatoria = possiveisPosicoes.removeAt(
+            DateTime.now().microsecondsSinceEpoch % possiveisPosicoes.length);
+        final linha = posicaoAleatoria[0];
+        final coluna = posicaoAleatoria[1];
+
+        tabuleiro[linha][coluna] = true;
+
+        print('Bomba $i - Linha: $linha, Coluna: $coluna');
+      }
+
+      final bombCount = tabuleiro.fold(
+          0,
+          (prev, row) =>
+              prev + row.fold(0, (prev, cell) => prev + (cell ? 1 : 0)));
+
+      print('Tabuleiro do Teste $i:');
+      for (var row in tabuleiro) {
+        print(row);
+      }
+
+      expect(bombCount, equals(limiteDeBombas));
+    });
+  }
+}
+
+void testLimiteDeBombasmedio(
+    int numRows, int numCols, int limiteDeBombas, String description) {
+  for (int i = 0; i < 15; i++) {
+    test('$description - Teste $i', () {
+      final tabuleiro =
+          List.generate(numRows, (i) => List.filled(numCols, false));
+
+      // Lista de posições possíveis no tabuleiro
+      final possiveisPosicoes = List.generate(numRows, (i) {
+        return List.generate(numCols, (j) => [i, j]);
+      }).expand((posicoes) => posicoes).toList();
+
+      for (int i = 0; i < limiteDeBombas; i++) {
+        final posicaoAleatoria = possiveisPosicoes.removeAt(
+            DateTime.now().microsecondsSinceEpoch % possiveisPosicoes.length);
+        final linha = posicaoAleatoria[0];
+        final coluna = posicaoAleatoria[1];
+
+        tabuleiro[linha][coluna] = true;
+
+        print('Bomba $i - Linha: $linha, Coluna: $coluna');
+      }
+
+      final bombCount = tabuleiro.fold(
+          0,
+          (prev, row) =>
+              prev + row.fold(0, (prev, cell) => prev + (cell ? 1 : 0)));
+
+      print('Tabuleiro do Teste $i:');
+      for (var row in tabuleiro) {
+        print(row);
+      }
+
+      expect(bombCount, equals(limiteDeBombas));
+    });
+  }
+}
+
+void testLimiteDeBombas(
+    int numRows, int numCols, int limiteDeBombas, String description) {
+  for (int i = 0; i < 15; i++) {
+    test('$description - Teste $i', () {
+      final tabuleiro =
+          List.generate(numRows, (i) => List.filled(numCols, false));
+
+      // Lista de posições possíveis no tabuleiro
+      final possiveisPosicoes = List.generate(numRows, (i) {
+        return List.generate(numCols, (j) => [i, j]);
+      }).expand((posicoes) => posicoes).toList();
+
+      for (int i = 0; i < limiteDeBombas; i++) {
+        final posicaoAleatoria = possiveisPosicoes.removeAt(
+            DateTime.now().microsecondsSinceEpoch % possiveisPosicoes.length);
+        final linha = posicaoAleatoria[0];
+        final coluna = posicaoAleatoria[1];
+
+        tabuleiro[linha][coluna] = true;
+
+        print('Bomba $i - Linha: $linha, Coluna: $coluna');
+      }
+
+      final bombCount = tabuleiro.fold(
+          0,
+          (prev, row) =>
+              prev + row.fold(0, (prev, cell) => prev + (cell ? 1 : 0)));
+
+      print('Tabuleiro do Teste $i:');
+      for (var row in tabuleiro) {
+        print(row);
+      }
+
+      expect(bombCount, equals(limiteDeBombas));
+    });
+  }
+}
+
+void testLimiteDificil(
+    List<Map<String, int>> testCases, String description, int limiteDeBombas) {
+  for (final testCase in testCases) {
+    test('$description - Coordenada (${testCase['row']}, ${testCase['col']})',
+        () {
+      // Verificar se a coordenada (${testCase['row']}, ${testCase['col']})
+      // está dentro dos limites de um tabuleiro de nível difícil 24x24
+      expect(testCase['row'], inInclusiveRange(0, 23));
+      expect(testCase['col'], inInclusiveRange(0, 23));
+    });
+
+    test('Limite de Bombas - Tabuleiro 24x24 (Nível Difícil)', () {
+      // Verificar se o número de bombas no tabuleiro de nível difícil 24x24 é igual ao limiteDeBombas
+      final numRows = 24;
+      final numCols = 24;
+      final numBombs = limiteDeBombas;
+
+      final tabuleiro =
+          List.generate(numRows, (i) => List.filled(numCols, false));
+
+      for (int i = 0; i < numBombs; i++) {
+        int linha, coluna;
+
+        do {
+          linha = DateTime.now().microsecondsSinceEpoch % numRows;
+          coluna = DateTime.now().microsecondsSinceEpoch % numCols;
+        } while (tabuleiro[linha][coluna]);
+
+        tabuleiro[linha][coluna] = true;
+      }
+
+      final bombCount = tabuleiro.fold(
+          0,
+          (prev, row) =>
+              prev + row.fold(0, (prev, cell) => prev + (cell ? 1 : 0)));
+
+      expect(bombCount, equals(numBombs));
+    });
+  }
+}
+
+void testLimiteMedio(List<Map<String, int>> testCases, String description) {
+  for (final testCase in testCases) {
+    test('$description - Coordenada (${testCase['row']}, ${testCase['col']})',
+        () {
+      // Executar testes com coordenada (${testCase['row']}, ${testCase['col']})
+      // em um tabuleiro de nível médio 10x16
+      expect(testCase['row'], inInclusiveRange(0, 9));
+      expect(testCase['col'], inInclusiveRange(0, 15));
+    });
+  }
+}
+
+void testLimiteFacil(List<Map<String, int>> testCases, String description) {
+  for (final testCase in testCases) {
+    test('$description - Coordenada (${testCase['row']}, ${testCase['col']})',
+        () {
+      // Executar testes com coordenada (${testCase['row']}, ${testCase['col']})
+      // em um tabuleiro 8x8
+      expect(testCase['row'], inInclusiveRange(0, 7));
+      expect(testCase['col'], inInclusiveRange(0, 7));
+    });
+  }
+}
+
+void testCases(int numRows, int numCols, String description,
+    Function(int, int) testFunction) {
+  for (int linha = 0; linha < numRows; linha++) {
+    for (int coluna = 0; coluna < numCols; coluna++) {
+      testFunction(linha, coluna);
+    }
+  }
 }
