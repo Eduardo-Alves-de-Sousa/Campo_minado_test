@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:campo_minado/campo_minado.dart';
 import 'package:campo_minado/dificuldade.dart';
 import 'package:test/test.dart';
@@ -972,6 +974,65 @@ void main() {
       ],
       "Selecionar Tamanho do Tabuleiro",
     );
+  });
+  group('Teste de Adição de Bombas - Tabuleiro Personalizado', () {
+    final testCases = [
+      {'rows': 5, 'cols': 5, 'bombs': 5},
+      {'rows': 12, 'cols': 12, 'bombs': 50},
+      {'rows': 15, 'cols': 15, 'bombs': 75},
+      {'rows': 8, 'cols': 8, 'bombs': 10},
+      {'rows': 10, 'cols': 16, 'bombs': 30},
+      {'rows': 24, 'cols': 24, 'bombs': 100},
+      {'rows': 5, 'cols': 5, 'bombs': 5},
+      {'rows': 12, 'cols': 12, 'bombs': 50},
+      {'rows': 15, 'cols': 15, 'bombs': 75},
+      {'rows': 6, 'cols': 6, 'bombs': 15},
+      {'rows': 20, 'cols': 10, 'bombs': 40},
+      {'rows': 16, 'cols': 8, 'bombs': 24},
+      {'rows': 9, 'cols': 9, 'bombs': 9},
+      {'rows': 18, 'cols': 14, 'bombs': 63},
+      {'rows': 14, 'cols': 14, 'bombs': 49},
+      {'rows': 7, 'cols': 12, 'bombs': 21},
+      {'rows': 11, 'cols': 11, 'bombs': 44},
+      {'rows': 13, 'cols': 20, 'bombs': 60},
+      {'rows': 22, 'cols': 18, 'bombs': 88},
+      {'rows': 6, 'cols': 9, 'bombs': 18},
+      {'rows': 9, 'cols': 15, 'bombs': 27},
+      {'rows': 17, 'cols': 13, 'bombs': 68},
+      {'rows': 19, 'cols': 21, 'bombs': 95}
+    ];
+
+    for (final testCase in testCases) {
+      test(
+          'Teste de Adição de Bombas - ${testCase['rows']}x${testCase['cols']}',
+          () {
+        final numRows = testCase['rows'] as int;
+        final numCols = testCase['cols'] as int;
+        final numBombs = testCase['bombs'] as int;
+
+        final tabuleiro =
+            List.generate(numRows, (i) => List.filled(numCols, false));
+
+        final possiveisPosicoes = List.generate(numRows, (i) {
+          return List.generate(numCols, (j) => [i, j]);
+        }).expand((posicoes) => posicoes).toList();
+
+        for (int i = 0; i < numBombs; i++) {
+          final posicaoAleatoria = possiveisPosicoes
+              .removeAt(Random().nextInt(possiveisPosicoes.length));
+          final linha = posicaoAleatoria[0];
+          final coluna = posicaoAleatoria[1];
+          tabuleiro[linha][coluna] = true;
+        }
+
+        final bombCount = tabuleiro.fold(
+            0,
+            (prev, row) =>
+                prev + row.fold(0, (prev, cell) => prev + (cell ? 1 : 0)));
+
+        expect(bombCount, equals(numBombs));
+      });
+    }
   });
 }
 

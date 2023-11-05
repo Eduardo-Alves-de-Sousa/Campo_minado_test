@@ -1,31 +1,27 @@
 import 'dart:io';
 import 'dart:math';
-// ignore: unused_import
-import 'dart:async';
 
-// Enum que representa os diferentes estados de cada célula no tabuleiro
 enum CellStatus { unrevealed, revealed, flagged }
 
 class Game {
-  late List<List<CellStatus>> _board; // Matriz de estados das células
-  late List<List<bool>> _bombs; // Matriz para rastrear a localização das bombas
-  int _rows = 0; // Número de linhas no tabuleiro
-  int _cols = 0; // Número de colunas no tabuleiro
-  int _numBombs = 0; // Número total de bombas no tabuleiro
-  bool _gameOver = false; // Flag para rastrear o estado do jogo
+  late List<List<CellStatus>> _board;
+  late List<List<bool>> _bombs;
+  int _rows = 0;
+  int _cols = 0;
+  int _numBombs = 0;
+  bool _gameOver = false;
+  bool _gameLost = false;
 
-  // Inicializa o jogo com o número de linhas, colunas e bombas especificado
-  void init(int rows, int cols, int numBombs) {
+  void init(int rows, cols, numBombs) {
     _rows = rows;
     _cols = cols;
     _numBombs = numBombs;
     _board =
         List.generate(rows, (_) => List.filled(cols, CellStatus.unrevealed));
     _bombs = List.generate(rows, (_) => List.filled(cols, false));
-    _placeBombs(); // Coloca as bombas aleatoriamente no tabuleiro
+    _placeBombs();
   }
 
-  // Coloca bombas aleatoriamente no tabuleiro
   void _placeBombs() {
     final random = Random();
     int bombsPlaced = 0;
@@ -39,27 +35,19 @@ class Game {
     }
   }
 
-  // Método para revelar uma célula no tabuleiro.
   void revealCell(int row, int col) {
-    // Verifica se o jogo já terminou; se sim, não faça nada.
     if (_gameOver) return;
-
-    // Verifica se a célula está marcada com uma bandeira; se sim, não faça nada.
     if (_board[row][col] == CellStatus.flagged) return;
-
-    // Verifica se a célula contém uma bomba; se sim, o jogo termina.
     if (_bombs[row][col]) {
+      _gameLost = true;
       _gameOver = true;
+      _revealAllBombs();
       return;
     }
 
-    // Marca a célula como "revelada".
     _board[row][col] = CellStatus.revealed;
 
-    // Conta quantas bombas adjacentes existem a esta célula.
     int bombsAdjacent = _countBombsAdjacent(row, col);
-
-    // Se não houver bombas adjacentes (bombsAdjacent == 0), revele células adjacentes.
     if (bombsAdjacent == 0) {
       for (int r = -1; r <= 1; r++) {
         for (int c = -1; c <= 1; c++) {
@@ -68,7 +56,6 @@ class Game {
               col + c >= 0 &&
               col + c < _cols) {
             if (_board[row + r][col + c] == CellStatus.unrevealed) {
-              // Chama recursivamente 'revealCell' para revelar células adjacentes sem bombas.
               revealCell(row + r, col + c);
             }
           }
@@ -77,7 +64,16 @@ class Game {
     }
   }
 
-  // Conta o número de bombas adjacentes a uma célula
+  void _revealAllBombs() {
+    for (int row = 0; row < _rows; row++) {
+      for (int col = 0; col < _cols; col++) {
+        if (_bombs[row][col]) {
+          _board[row][col] = CellStatus.revealed;
+        }
+      }
+    }
+  }
+
   int _countBombsAdjacent(int row, int col) {
     int count = 0;
     for (int r = -1; r <= 1; r++) {
@@ -95,10 +91,8 @@ class Game {
     return count;
   }
 
-  // Marca ou desmarca uma célula no tabuleiro
   void toggleFlag(int row, int col) {
     if (_gameOver) return;
-
     if (_board[row][col] == CellStatus.unrevealed) {
       _board[row][col] = CellStatus.flagged;
     } else if (_board[row][col] == CellStatus.flagged) {
@@ -106,39 +100,10 @@ class Game {
     }
   }
 
-  // Verifica se o jogo terminou (vitória ou derrota)
   bool isGameOver() {
     return _gameOver;
   }
 
-  // Imprime o tabuleiro no terminal
-  void printBoard() {
-    for (int row = 0; row < _rows; row++) {
-      for (int col = 0; col < _cols; col++) {
-        switch (_board[row][col]) {
-          case CellStatus.unrevealed:
-            stdout.write(' '); // Célula não revelada
-            break;
-          case CellStatus.flagged:
-            stdout.write('F'); // Célula marcada com bandeira
-            break;
-          case CellStatus.revealed:
-            int bombsAdjacent = _countBombsAdjacent(row, col);
-            if (bombsAdjacent == 0) {
-              stdout.write(' '); // Célula revelada sem bombas adjacentes
-            } else {
-              stdout.write(
-                  bombsAdjacent.toString()); // Número de bombas adjacentes
-            }
-            break;
-        }
-        stdout.write(' | ');
-      }
-      stdout.writeln();
-    }
-  }
-
-  // Verifica se o jogo foi perdido
   bool isGameLost() {
     if (_gameOver) {
       for (int row = 0; row < _rows; row++) {
@@ -150,6 +115,35 @@ class Game {
       }
     }
     return false;
+  }
+
+  void printBoard() {
+    for (int row = 0; row < _rows; row++) {
+      for (int col = 0; col < _cols; col++) {
+        if (_gameLost && _bombs[row][col]) {
+          stdout.write('B');
+        } else {
+          switch (_board[row][col]) {
+            case CellStatus.unrevealed:
+              stdout.write(' ');
+              break;
+            case CellStatus.flagged:
+              stdout.write('F');
+              break;
+            case CellStatus.revealed:
+              int bombsAdjacent = _countBombsAdjacent(row, col);
+              if (bombsAdjacent == 0) {
+                stdout.write(' ');
+              } else {
+                stdout.write(bombsAdjacent.toString());
+              }
+              break;
+          }
+        }
+        stdout.write(' | ');
+      }
+      stdout.writeln();
+    }
   }
 }
 
