@@ -19,3 +19,8 @@
 * Uma bomba explode se o jogador descobrir a zona que ela se encontra.
 * A pontuação do jogo é dada pelo tempo levado para descobrir todas as bombas em segundos.
 * O número de bombas é fixo a cada partida nível jogado. Considere três graus de dificuldade, dados pelas dimensões do tabuleiro e a densidade de bombas espalhadas no campo: fácil (8x8 – 10 bombas); intermediário (10x16 – 30 bombas); e difícil (24x24 – 100 bombas). Mantenha uma histórico de resultados para consulta.
+
+# JOGO.
+
+<img>![image](https://github.com/Eduardo-Alves-de-Sousa/Campo_minado_test/assets/55249802/50827ef0-eb87-40a6-959d-370fa362a9f3)
+</img>
