@@ -158,9 +158,18 @@ void main() {
   print('4 - Personalizado');
   print('5 - Ver Tempos de Jogo');
   print('6 - Sair\n');
-  stdout.write("Escolha uma opção: ");
 
-  int choice = int.parse(stdin.readLineSync()!);
+  int choice;
+  while (true) {
+    stdout.write("Escolha uma opção: ");
+    choice = int.tryParse(stdin.readLineSync() ?? '')!;
+    // ignore: unnecessary_null_comparison
+    if (choice != null && choice >= 1 && choice <= 6) {
+      break; // A escolha é válida, saia do loop
+    }
+    print("Escolha uma opção válida (1 a 6)!");
+  }
+
   int rows = 0;
   int cols = 0;
   int numBombs = 0;
