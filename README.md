@@ -1,5 +1,9 @@
 # Você precisa do Dart instalado na sua maquina
 
+## Requisitos de sistema
+
+- O Dart SDK é compatível com Windows, Linux e macOS
+
 * Documentação
 
   [Dart documentation](https://dart.dev/guides)
