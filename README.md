@@ -2,7 +2,7 @@
 
 ## Requisitos de sistema
 
-- O Dart SDK é compatível com Windows, Linux e macOS
+- O Dart SDK é compatível com Windows, Linux e macOS ;)
 
 * Documentação
 
