@@ -42,3 +42,8 @@
 
 <img>![image](https://github.com/Eduardo-Alves-de-Sousa/Campo_minado_test/assets/55249802/b879158b-4336-40a9-a4c1-5f8e17ce2adc)
 </img>
+
+# TESTES.
+
+<img>![image](https://github.com/Eduardo-Alves-de-Sousa/Campo_minado_test/assets/55249802/aa510898-841d-4efe-85a7-e1cb23a1ac62)
+</img>
