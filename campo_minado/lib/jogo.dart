@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:campo_minado/excepition/jogo_exception.dart';
 
 enum CellStatus { unrevealed, revealed, flagged }
 
@@ -13,6 +14,14 @@ class Game {
   bool _gameLost = false;
 
   void init(int rows, cols, numBombs) {
+    if (rows <= 0 || cols <= 0 || numBombs <= 0) {
+      throw InvalidInputException(
+          'O número de linhas, colunas e bombas deve ser maior que zero.');
+    }
+    if (numBombs >= rows * cols) {
+      throw InvalidInputException(
+          'O número de bombas não pode ser maior ou igual ao número de células.');
+    }
     _rows = rows;
     _cols = cols;
     _numBombs = numBombs;
@@ -36,7 +45,9 @@ class Game {
   }
 
   void revealCell(int row, int col) {
-    if (_gameOver) return;
+    if (_gameOver) {
+      throw GameOverException('O jogo acabou.');
+    }
     if (_board[row][col] == CellStatus.flagged) return;
     if (_bombs[row][col]) {
       _gameLost = true;
@@ -44,9 +55,7 @@ class Game {
       _revealAllBombs();
       return;
     }
-
     _board[row][col] = CellStatus.revealed;
-
     int bombsAdjacent = _countBombsAdjacent(row, col);
     if (bombsAdjacent == 0) {
       for (int r = -1; r <= 1; r++) {
@@ -92,7 +101,10 @@ class Game {
   }
 
   void toggleFlag(int row, int col) {
-    if (_gameOver) return;
+    if (_gameOver) {
+      return;
+    }
+
     if (_board[row][col] == CellStatus.unrevealed) {
       _board[row][col] = CellStatus.flagged;
     } else if (_board[row][col] == CellStatus.flagged) {
@@ -144,142 +156,5 @@ class Game {
       }
       stdout.writeln();
     }
-  }
-}
-
-void main() {
-  print("|-----------------------------------------------------------|");
-  print('|Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:|');
-  print("|-----------------------------------------------------------|");
-
-  print('\n1 - Fácil (8x8, 10 bombas)');
-  print('2 - Médio (10x16, 30 bombas)');
-  print('3 - Difícil (24x24, 100 bombas)');
-  print('4 - Personalizado');
-  print('5 - Ver Tempos de Jogo');
-  print('6 - Sair\n');
-
-  int choice;
-  while (true) {
-    stdout.write("Escolha uma opção: ");
-    choice = int.tryParse(stdin.readLineSync() ?? '')!;
-    // ignore: unnecessary_null_comparison
-    if (choice != null && choice >= 1 && choice <= 6) {
-      break; // A escolha é válida, saia do loop
-    }
-    print("Escolha uma opção válida (1 a 6)!");
-  }
-
-  int rows = 0;
-  int cols = 0;
-  int numBombs = 0;
-
-  if (choice == 1) {
-    rows = 8;
-    cols = 8;
-    numBombs = 10;
-  } else if (choice == 2) {
-    rows = 10;
-    cols = 16;
-    numBombs = 30;
-  } else if (choice == 3) {
-    rows = 24;
-    cols = 24;
-    numBombs = 100;
-  } else if (choice == 4) {
-    print('Digite o número de linhas: ');
-    rows = int.parse(stdin.readLineSync()!);
-    print('Digite o número de colunas: ');
-    cols = int.parse(stdin.readLineSync()!);
-    print('Digite o número de bombas: ');
-    stdout.write("Escolha uma opção: ");
-    numBombs = int.parse(stdin.readLineSync()!);
-  } else if (choice == 5) {
-    // Opção para visualizar tempos de jogo
-    print('Tempos de Jogo Registrados:');
-    _viewGameTimes();
-    return;
-  } else if (choice == 6) {
-    print('Você saiu do jogo.');
-    return;
-  }
-
-  final game = Game();
-  game.init(rows, cols, numBombs);
-
-  // Declare e inicie o cronômetro
-  final stopwatch = Stopwatch()..start();
-
-  while (!game.isGameOver()) {
-    print('Tabuleiro:');
-    game.printBoard();
-    print('\nEscolha uma ação:');
-    print('1 - Revelar célula');
-    print('2 - Marcar/Desmarcar célula');
-    print('3 - Sair\n');
-    stdout.write("Escolha uma opção: ");
-    int action = int.parse(stdin.readLineSync()!);
-
-    if (action == 3) {
-      print('Você saiu do jogo.');
-      break;
-    }
-
-    print('Digite a linha (0 a ${rows - 1}): ');
-    int row = int.parse(stdin.readLineSync()!);
-    print('Digite a coluna (0 a ${cols - 1}): ');
-    int col = int.parse(stdin.readLineSync()!);
-
-    if (action == 1) {
-      game.revealCell(row, col);
-    } else if (action == 2) {
-      game.toggleFlag(row, col);
-    }
-  }
-
-  // Pare o cronômetro quando o jogo terminar (ou quando desejar medir o tempo)
-  stopwatch.stop();
-
-  // Obtenha o tempo decorrido em milissegundos
-  int tempoEmMilissegundos = stopwatch.elapsedMilliseconds;
-
-  // Converta o tempo para segundos
-  double tempoEmSegundos = tempoEmMilissegundos / 1000;
-
-  // Salve o tempo de jogo
-  _saveGameTime(tempoEmSegundos);
-
-  // ignore: unnecessary_brace_in_string_interps
-  print('Tempo de jogo: ${tempoEmSegundos} segundos');
-
-  print('Jogo terminado!');
-  if (game.isGameOver() && !game.isGameLost()) {
-    print('Você venceu!');
-  } else {
-    print('Você perdeu!');
-  }
-}
-
-// Função para salvar o tempo de jogo em um arquivo
-void _saveGameTime(double gameTime) {
-  final file = File('game_times.txt');
-  if (!file.existsSync()) {
-    file.createSync();
-  }
-
-  final timeString = '${DateTime.now()}: $gameTime segundos\n';
-
-  file.writeAsStringSync(timeString, mode: FileMode.append);
-}
-
-// Função para visualizar tempos de jogo salvos
-void _viewGameTimes() {
-  final file = File('game_times.txt');
-  if (file.existsSync()) {
-    final content = file.readAsStringSync();
-    print('Tempos de Jogo Registrados:');
-    print(content);
-  } else {
-    print('Nenhum tempo de jogo registrado ainda.');
   }
 }

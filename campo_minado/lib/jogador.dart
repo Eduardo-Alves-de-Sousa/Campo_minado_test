@@ -1,4 +1,5 @@
 import 'package:campo_minado/campo_minado.dart';
+import 'package:campo_minado/excepition/jogador_exception.dart';
 
 class Jogador extends Game {
   List<String> historicoDeAcoes = [];
@@ -11,21 +12,22 @@ class Jogador extends Game {
   }
 
   void marcarComBandeira(int linha, int coluna) {
-    if (linha >= 0 &&
-        linha < getBoard().length &&
-        coluna >= 0 &&
-        coluna < getBoard()[0].length) {
-      // Verifica se a zona já foi descoberta
-      if (getBoard()[linha][coluna] != 'D') {
-        // Marca a zona com uma bandeira na posição (linha, coluna)
-        if (getBoard()[linha][coluna] != 'F') {
-          getBoard()[linha][coluna] = 'F'; // 'F' representa uma bandeira
-        } else {
-          getBoard()[linha][coluna] =
-              'O'; // Remove a bandeira se já estiver marcada
-        }
-      }
+    if (linha < 0 ||
+        linha >= getBoard().length ||
+        coluna < 0 ||
+        coluna >= getBoard()[0].length) {
+      throw PosicaoForaDosLimitesException();
     }
+
+    if (getBoard()[linha][coluna] == 'D') {
+      throw ZonaDescobertaComBandeiraException();
+    }
+
+    if (getBoard()[linha][coluna] == 'F') {
+      throw BandeiraJaMarcadaException();
+    }
+
+    getBoard()[linha][coluna] = 'F'; // 'F' representa uma bandeira
   }
 
   bool verificarGanharJogo() {
