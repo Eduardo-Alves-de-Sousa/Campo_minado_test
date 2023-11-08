@@ -3,6 +3,7 @@
 * Documentação
 
   [Dart documentation](https://dart.dev/guides)
+  
   [Get the Dart SDK](https://dart.dev/get-dart)
 
 ## Ao clonar o repositório para rodar o jogo, acesse a pasta 'lib' no seu VS code e aplique o sequinte comando:
