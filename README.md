@@ -40,5 +40,5 @@
 
 # JOGO.
 
-<img>![image](https://github.com/Eduardo-Alves-de-Sousa/Campo_minado_test/assets/55249802/50827ef0-eb87-40a6-959d-370fa362a9f3)
+<img>![image](https://github.com/Eduardo-Alves-de-Sousa/Campo_minado_test/assets/55249802/b879158b-4336-40a9-a4c1-5f8e17ce2adc)
 </img>
