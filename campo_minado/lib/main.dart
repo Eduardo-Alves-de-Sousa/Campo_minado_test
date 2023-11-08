@@ -4,9 +4,9 @@ import 'package:campo_minado/jogo.dart';
 
 void main() {
   while (true) {
-    print("*|-----------------------------------------------------------|");
-    print('*|Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:|');
-    print("*|-----------------------------------------------------------|");
+    print("*|-----------------------------------------------------------|*");
+    print('*|Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:|*');
+    print("*|-----------------------------------------------------------|*");
 
     print('\n1 - Fácil (8x8, 10 bombas)');
     print('2 - Médio (10x16, 30 bombas)');
