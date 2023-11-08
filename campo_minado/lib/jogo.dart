@@ -2,17 +2,20 @@ import 'dart:io';
 import 'dart:math';
 import 'package:campo_minado/excepition/jogo_exception.dart';
 
+// Enumeração para representar o estado de uma célula no tabuleiro.
 enum CellStatus { unrevealed, revealed, flagged }
 
 class Game {
-  late List<List<CellStatus>> _board;
-  late List<List<bool>> _bombs;
-  int _rows = 0;
-  int _cols = 0;
-  int _numBombs = 0;
-  bool _gameOver = false;
-  bool _gameLost = false;
+  late List<List<CellStatus>>
+      _board; // Matriz para armazenar o estado de cada célula
+  late List<List<bool>> _bombs; // Matriz para indicar a presença de bombas
+  int _rows = 0; // Número de linhas no tabuleiro
+  int _cols = 0; // Número de colunas no tabuleiro
+  int _numBombs = 0; // Número total de bombas no tabuleiro
+  bool _gameOver = false; // Indica se o jogo acabou
+  bool _gameLost = false; // Indica se o jogador perdeu
 
+  // Inicializa o jogo com o número de linhas, colunas e bombas especificados.
   void init(int rows, cols, numBombs) {
     if (rows <= 0 || cols <= 0 || numBombs <= 0) {
       throw InvalidInputException(
@@ -31,6 +34,7 @@ class Game {
     _placeBombs();
   }
 
+  // Coloca as bombas aleatoriamente no tabuleiro.
   void _placeBombs() {
     final random = Random();
     int bombsPlaced = 0;
@@ -44,6 +48,7 @@ class Game {
     }
   }
 
+  // Revela uma célula no tabuleiro.
   void revealCell(int row, int col) {
     if (_gameOver) {
       throw GameOverException('O jogo acabou.');
@@ -73,6 +78,7 @@ class Game {
     }
   }
 
+  // Revela todas as bombas no tabuleiro.
   void _revealAllBombs() {
     for (int row = 0; row < _rows; row++) {
       for (int col = 0; col < _cols; col++) {
@@ -83,6 +89,7 @@ class Game {
     }
   }
 
+  // Conta o número de bombas adjacentes a uma célula.
   int _countBombsAdjacent(int row, int col) {
     int count = 0;
     for (int r = -1; r <= 1; r++) {
@@ -100,6 +107,7 @@ class Game {
     return count;
   }
 
+  // Alterna o estado de uma célula entre revelada e marcada com bandeira.
   void toggleFlag(int row, int col) {
     if (_gameOver) {
       return;
@@ -112,10 +120,12 @@ class Game {
     }
   }
 
+  // Verifica se o jogo acabou.
   bool isGameOver() {
     return _gameOver;
   }
 
+  // Verifica se o jogador perdeu o jogo.
   bool isGameLost() {
     if (_gameOver) {
       for (int row = 0; row < _rows; row++) {
@@ -129,6 +139,7 @@ class Game {
     return false;
   }
 
+  // Imprime o tabuleiro no console.
   void printBoard() {
     for (int row = 0; row < _rows; row++) {
       for (int col = 0; col < _cols; col++) {

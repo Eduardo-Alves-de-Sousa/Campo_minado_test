@@ -11,6 +11,8 @@ class Jogador extends Game {
     historicoDeAcoes.clear(); // Limpa o histórico ao iniciar um novo jogo.
   }
 
+  // Marca a célula com uma bandeira
+  // Lança exceções em caso de posições inválidas ou ações proibidas
   void marcarComBandeira(int linha, int coluna) {
     if (linha < 0 ||
         linha >= getBoard().length ||
@@ -30,6 +32,7 @@ class Jogador extends Game {
     getBoard()[linha][coluna] = 'F'; // 'F' representa uma bandeira
   }
 
+  // Verifica se o jogador ganhou o jogo, marcando todas as minas com bandeiras
   bool verificarGanharJogo() {
     int bombCount = getBombCount();
     int totalFlags = getTotalFlagCount();
@@ -50,6 +53,7 @@ class Jogador extends Game {
     return false; // Não há bandeiras em todas as minas
   }
 
+  // Verifica se uma célula tem uma bandeira marcada
   bool temBandeira(int linha, int coluna) {
     if (linha >= 0 &&
         linha < getBoard().length &&
@@ -61,6 +65,7 @@ class Jogador extends Game {
     return false;
   }
 
+  // Remove uma bandeira de uma célula
   void removerBandeira(int linha, int coluna) {
     if (linha >= 0 &&
         linha < getBoard().length &&
@@ -71,6 +76,7 @@ class Jogador extends Game {
     }
   }
 
+  // Verifica se o jogador ganhou o jogo, marcando todas as minas com bandeiras
   bool isGameWon() {
     for (int linha = 0; linha < getBoard().length; linha++) {
       for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {
@@ -82,6 +88,7 @@ class Jogador extends Game {
     return true;
   }
 
+  // Marca uma zona como descoberta
   void descobrirZona(int linha, int coluna) {
     if (linha >= 0 &&
         linha < getBoard().length &&
@@ -95,6 +102,7 @@ class Jogador extends Game {
     }
   }
 
+  // Verifica se uma zona está descoberta
   bool estaDescoberta(int linha, int coluna) {
     if (linha >= 0 &&
         linha < getBoard().length &&
@@ -106,6 +114,7 @@ class Jogador extends Game {
     return false;
   }
 
+  // Retorna o número total de minas no tabuleiro
   int getBombCount() {
     int bombCount = 0;
 
@@ -120,6 +129,7 @@ class Jogador extends Game {
     return bombCount;
   }
 
+  // Retorna o número total de bandeiras marcadas no tabuleiro
   int getTotalFlagCount() {
     int totalFlags = 0;
 
@@ -134,14 +144,17 @@ class Jogador extends Game {
     return totalFlags;
   }
 
+  // Adiciona uma ação ao histórico de ações do jogador
   void adicionarAcaoAoHistorico(String acao) {
     historicoDeAcoes.add(acao);
   }
 
+  // Obtém o histórico de ações do jogador
   List<String> obterHistoricoDeAcoes() {
     return List.from(historicoDeAcoes);
   }
 
+  // Conta o número de bandeiras marcadas no tabuleiro
   int contarBandeirasMarcadas() {
     int count = 0;
     for (int linha = 0; linha < getBoard().length; linha++) {
@@ -154,6 +167,7 @@ class Jogador extends Game {
     return count;
   }
 
+  // Remove todas as bandeiras marcadas no tabuleiro
   void limparTodasBandeiras() {
     for (int linha = 0; linha < getBoard().length; linha++) {
       for (int coluna = 0; coluna < getBoard()[0].length; coluna++) {

@@ -4,9 +4,9 @@ import 'package:campo_minado/jogo.dart';
 
 void main() {
   while (true) {
-    print("*|-----------------------------------------------------------|*");
-    print('*|Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:|*');
-    print("*|-----------------------------------------------------------|*");
+    print("|-----------------------------------------------------------|");
+    print("|Bem-vindo ao Campo Minado! Escolha um nível de dificuldade:|");
+    print("|-----------------------------------------------------------|");
 
     print('\n1 - Fácil (8x8, 10 bombas)');
     print('2 - Médio (10x16, 30 bombas)');
@@ -57,18 +57,18 @@ void main() {
     } else if (choice == 5) {
       // Opção para visualizar tempos de jogo
       _viewGameTimes();
-      continue; // Volte ao menu principal
+      continue; // Volta ao menu principal
     } else if (choice == 6) {
       // Opção para deletar tempos de jogo
       _deleteGameTime();
-      continue; // Volte ao menu principal
+      continue; // Volta ao menu principal
     }
 
     final game = Game();
     try {
       game.init(rows, cols, numBombs);
 
-      // Declare e inicie o cronômetro
+      // Declara e inicia o cronômetro
       final stopwatch = Stopwatch()..start();
 
       while (!game.isGameOver()) {
@@ -103,13 +103,13 @@ void main() {
         }
       }
 
-      // Pare o cronômetro quando o jogo terminar (ou quando desejar medir o tempo)
+      // Para o cronômetro quando o jogo terminar (ou quando desejar medir o tempo)
       stopwatch.stop();
 
-      // Obtenha o tempo decorrido em milissegundos
+      // Obtem o tempo decorrido em milissegundos
       int tempoEmMilissegundos = stopwatch.elapsedMilliseconds;
 
-      // Converta o tempo para segundos
+      // Converte o tempo para segundos
       double tempoEmSegundos = tempoEmMilissegundos / 1000;
 
       // ignore: unnecessary_brace_in_string_interps
