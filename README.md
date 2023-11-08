@@ -1,5 +1,3 @@
-# TRABALHO PRÁTICO - CAMPO MINADO || IMPLEMENTAÇÃO DE REQUISITOS E CASOS DE TESTES
-
 # Você precisa do Dart instalado na sua maquina
 
 [Documentação](https://dart.dev/guides)
@@ -9,6 +7,7 @@
 ```http
   dart main.dart
 ```
+# TRABALHO PRÁTICO - CAMPO MINADO || IMPLEMENTAÇÃO DE REQUISITOS E CASOS DE TESTES
 
 * Você trabalha numa empresa que desenvolve jogos simples para permitir que os usuários passem o seu tempo livre jogando. Sua equipe acaba de fazer um brainstorming e decidir quais e quem desenvolveria os próximos jogos. Você ficou responsável por desenvolver um jogo de Campo Minado. A equipe já desenhou o protótipo de baixa fidelidade, que é ilustrado a baixo.
   
