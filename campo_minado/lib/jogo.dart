@@ -148,7 +148,7 @@ class Game {
         } else {
           switch (_board[row][col]) {
             case CellStatus.unrevealed:
-              stdout.write(' ');
+              stdout.write('?');
               break;
             case CellStatus.flagged:
               stdout.write('F');
